@@ -60,7 +60,7 @@ public class MapSelect implements Screen {
 
         Table table = new Table();
         table.setSize(MENU_WIDTH,MENU_HEIGHT);
-        table.setDebug(true);
+        //table.setDebug(true);
 
         table.top().add(generateTitle());
 
