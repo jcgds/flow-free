@@ -2,84 +2,89 @@ package com.squidgames;
 
 import com.badlogic.gdx.Game;
 import com.badlogic.gdx.Gdx;
+import com.badlogic.gdx.Input;
 import com.badlogic.gdx.Screen;
 import com.badlogic.gdx.graphics.Color;
+import com.badlogic.gdx.graphics.GL20;
+import com.badlogic.gdx.graphics.OrthographicCamera;
 import com.badlogic.gdx.scenes.scene2d.InputEvent;
 import com.badlogic.gdx.scenes.scene2d.Stage;
 import com.badlogic.gdx.scenes.scene2d.ui.Label;
 import com.badlogic.gdx.scenes.scene2d.ui.Table;
 import com.badlogic.gdx.scenes.scene2d.utils.ClickListener;
-import com.badlogic.gdx.utils.viewport.ScreenViewport;
+import com.badlogic.gdx.utils.viewport.FitViewport;
+import com.badlogic.gdx.utils.viewport.Viewport;
 
 /**
- * Created by juan_ on 13-Jul-17.
+ * Created by juan_ on 11-Aug-17.
  */
 
 public class MainMenu implements Screen {
-    private Stage stage;
-    private Game game;
+    private final String TAG = getClass().getSimpleName();
+    private final float MENU_WIDTH = 1080.00f;
+    private final float MENU_HEIGHT = 1920.00f;
+
+    Game game;
+    Stage stage;
 
     public MainMenu(Game game) {
-        stage = new Stage(new ScreenViewport());
         this.game = game;
-
-        Table table = new Table();
-        //table.setDebug(true);
-
-        table.setBounds(0,0, Gdx.graphics.getWidth(),Gdx.graphics.getHeight());
-
-        Label l1 = new Label("F", new Label.LabelStyle(FlowFree.GAME_FONTS.get("cafeBig"), Color.GREEN));
-        Label l2 = new Label("L", new Label.LabelStyle(FlowFree.GAME_FONTS.get("cafeBig"),Color.BLUE));
-        Label l3 = new Label("O", new Label.LabelStyle(FlowFree.GAME_FONTS.get("cafeBig"),Color.RED));
-        Label l4 = new Label("W", new Label.LabelStyle(FlowFree.GAME_FONTS.get("cafeBig"),Color.ORANGE));
-
-        Table title = new Table();
-        title.add(l1,l2,l3,l4);
-
-        Label m2 = new Label("play", new Label.LabelStyle(FlowFree.GAME_FONTS.get("cafeSmall"),Color.WHITE));
-
-        m2.addListener(new ClickListener() {
-            @Override
-            public boolean touchDown(InputEvent event, float x, float y, int pointer, int button) {
-                System.out.println("Touched!");
-                MainMenu.this.game.setScreen(new DimesionSelect(MainMenu.this.game));
-                return true;
-            }
-        });
-
-        table.add(title).padBottom(Gdx.graphics.getWidth()/7.2f);
-        table.row();
-        table.add(m2).padBottom(Gdx.graphics.getWidth()/2.16f);
-        table.row();
-
-        Table autor1 = new Table(), autor2 = new Table();
-        autor1.setFillParent(true);
-        autor2.setFillParent(true);
-        Label pedro = new Label("Pedro A. Pacheco",new Label.LabelStyle(FlowFree.GAME_FONTS.get("cafeSmallSmall"),Color.WHITE));
-        Label juan = new Label("Juan C. Goncalves",new Label.LabelStyle(FlowFree.GAME_FONTS.get("cafeSmallSmall"),Color.WHITE));
-
-
-        autor1.add(juan).expand().bottom().left().padLeft(50);
-        autor2.add(pedro).expand().bottom().right().padRight(50);
-        stage.addActor(table);
-        stage.addActor(autor1);
-        stage.addActor(autor2);
     }
 
     @Override
     public void show() {
+
+        OrthographicCamera camera = new OrthographicCamera();
+        Viewport viewport = new FitViewport(MENU_WIDTH,MENU_HEIGHT,camera);
+        stage = new Stage(viewport);
+
+        Table table = new Table();
+        table.setSize(MENU_WIDTH,MENU_HEIGHT);
+        //table.setDebug(true);
+
+        Table title = new Table();
+        Label l1 = new Label("F", new Label.LabelStyle(FlowFree.GAME_FONTS.get("cafeBig"), Color.GREEN));
+        Label l2 = new Label("L", new Label.LabelStyle(FlowFree.GAME_FONTS.get("cafeBig"),Color.BLUE));
+        Label l3 = new Label("O", new Label.LabelStyle(FlowFree.GAME_FONTS.get("cafeBig"),Color.RED));
+        Label l4 = new Label("W", new Label.LabelStyle(FlowFree.GAME_FONTS.get("cafeBig"),Color.ORANGE));
+        title.add(l1,l2,l3,l4);
+        table.add(title).row();
+
+        Label play_message = new Label("Start",new Label.LabelStyle(FlowFree.GAME_FONTS.get("cafeMedium"),Color.WHITE));
+        play_message.addListener(new ClickListener() {
+            @Override
+            public boolean touchDown(InputEvent event, float x, float y, int pointer, int button) {
+                Gdx.app.log(TAG,"Play button clicked");
+                game.setScreen(new DimesionSelect(game));
+                // MainMenu.this.game.setScreen(new DimesionSelect(MainMenu.this.game));
+                return true;
+            }
+
+        });
+        table.add(play_message).padTop(50);
+
+        stage.addActor(table);
         Gdx.input.setInputProcessor(stage);
     }
 
     @Override
     public void render(float delta) {
+        Gdx.gl.glClearColor(0, 0, 0, 1);
+        Gdx.gl.glClear(GL20.GL_COLOR_BUFFER_BIT);
+
+        //TODO: Cambiar esto por una manera mas elegante de lidiar con el backbutton
+        if (Gdx.input.isKeyPressed(Input.Keys.BACK)){
+            Gdx.input.setCatchBackKey(false);
+        }
+
         stage.act();
         stage.draw();
     }
 
     @Override
     public void resize(int width, int height) {
-
+        Gdx.app.log(TAG,"Resizing. New dimensions: " + width + "," + height);
+        stage.getViewport().update(width,height,true);
     }
 
     @Override
@@ -102,3 +107,4 @@ public class MainMenu implements Screen {
         stage.dispose();
     }
 }
+

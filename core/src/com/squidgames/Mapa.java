@@ -38,6 +38,8 @@ public abstract class Mapa extends Actor{
         }
     }
 
+
+
     public Mapa() {
         //Esquina inferior izquierda, donde debe comenzar a dibujarse el tablero para que quede centrado verticalmente
         this.origin = new Vector2(0,FlowFree.GAME_SCREEN_HEIGHT/2 - FlowFree.GAME_SCREEN_WIDTH/2);

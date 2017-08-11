@@ -12,7 +12,6 @@ public class AndroidLauncher extends AndroidApplication {
 		AndroidApplicationConfiguration config = new AndroidApplicationConfiguration();
 		//Anti aliasing para que las figuras tengan mejores bordes
 		config.numSamples = 4;
-		config.useImmersiveMode = true;
 		initialize(new FlowFree(), config);
 
 	}

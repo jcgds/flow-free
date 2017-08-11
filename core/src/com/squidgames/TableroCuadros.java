@@ -23,6 +23,8 @@ import java.util.HashMap;
 public class TableroCuadros extends Mapa {
     private float espacioCasilla;
     private float LINE_WIDTH = 3;
+    private float SCREEN_WIDTH = 10;
+    private float SCREEN_HEIGHT = 18;
 
     @Override
     public void draw(Batch batch, float parentAlpha) {
@@ -110,7 +112,7 @@ public class TableroCuadros extends Mapa {
             float rest = (LINE_WIDTH*FlowFree.GAME_SCREEN_WIDTH)/Gdx.graphics.getWidth();
 
 
-            this.espacioCasilla = FlowFree.GAME_SCREEN_WIDTH/tablero.size() - rest/2;
+            this.espacioCasilla = SCREEN_WIDTH/tablero.size() - rest/2;
             this.setOriginX(rest/2);
 
             HashMap<String, Casilla> sinPareja = new HashMap<String, Casilla>();
@@ -142,7 +144,8 @@ public class TableroCuadros extends Mapa {
             //Aqui ya tenemos la matriz con todas las Casillas con sus respectivas parejas
             //Ahora seteamos las posiciones en el Stage de todas las Casillas
 
-            float yMove = FlowFree.GAME_SCREEN_HEIGHT - this.getOrigin().y - espacioCasilla;
+            //TODO: Arreglar el calculo de la Y original pues cambiamos la altura base que ahora es 18
+            float yMove = SCREEN_HEIGHT - this.getOrigin().y - espacioCasilla;
             float xMove = this.getOriginX();
 
             ArrayList<Casilla> finalAtt = new ArrayList<Casilla>();

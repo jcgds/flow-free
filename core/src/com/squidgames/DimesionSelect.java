@@ -2,14 +2,17 @@ package com.squidgames;
 
 import com.badlogic.gdx.Game;
 import com.badlogic.gdx.Gdx;
+import com.badlogic.gdx.Input;
 import com.badlogic.gdx.Screen;
 import com.badlogic.gdx.graphics.Color;
+import com.badlogic.gdx.graphics.OrthographicCamera;
 import com.badlogic.gdx.scenes.scene2d.InputEvent;
 import com.badlogic.gdx.scenes.scene2d.Stage;
 import com.badlogic.gdx.scenes.scene2d.ui.Label;
 import com.badlogic.gdx.scenes.scene2d.ui.Table;
 import com.badlogic.gdx.scenes.scene2d.utils.ClickListener;
-import com.badlogic.gdx.utils.viewport.ScreenViewport;
+import com.badlogic.gdx.utils.viewport.FitViewport;
+import com.badlogic.gdx.utils.viewport.Viewport;
 
 import java.util.HashMap;
 
@@ -18,14 +21,17 @@ import java.util.HashMap;
  */
 
 public class DimesionSelect implements Screen {
+    private final String TAG = getClass().getSimpleName();
     private Stage stage;
     private Game game;
+    private HashMap<Integer,Color> colorMap;
+    private final float MENU_WIDTH = 1080.00f;
+    private final float MENU_HEIGHT = 1920.00f;
 
     public DimesionSelect(final Game game) {
+        this.game = game;
 
-        //region ColorMap
-        HashMap<Integer,Color> colorMap = new HashMap<Integer, Color>();
-
+        colorMap = new HashMap<Integer, Color>();
         colorMap.put(1,Color.CYAN);
         colorMap.put(2,Color.RED);
         colorMap.put(3,Color.GREEN);
@@ -34,30 +40,25 @@ public class DimesionSelect implements Screen {
         colorMap.put(6,Color.YELLOW);
         colorMap.put(7,Color.BLUE);
         colorMap.put(8,Color.ORANGE);
-        //endregion
+    }
 
-        stage = new Stage(new ScreenViewport());
-        this.game = game;
+
+    @Override
+    public void show() {
+        Gdx.input.setCatchBackKey(true);
+        Viewport viewport = new FitViewport(MENU_WIDTH,MENU_HEIGHT, new OrthographicCamera());
+        stage = new Stage(viewport);
+        Gdx.input.setInputProcessor(stage);
 
         Table table = new Table();
-        table.setBounds(0,0, Gdx.graphics.getWidth(),Gdx.graphics.getHeight());
+        table.setSize(MENU_WIDTH,MENU_HEIGHT);
+        //table.setDebug(true);
 
-        Table title = new Table();
-        title.setPosition(0,0);
-        Label l1 = new Label("d", new Label.LabelStyle(FlowFree.GAME_FONTS.get("cafeMedium"),Color.GREEN));
-        Label l2 = new Label("i", new Label.LabelStyle(FlowFree.GAME_FONTS.get("cafeMedium"),Color.WHITE));
-        Label l3 = new Label("m", new Label.LabelStyle(FlowFree.GAME_FONTS.get("cafeMedium"),Color.RED));
-        Label l4 = new Label("e", new Label.LabelStyle(FlowFree.GAME_FONTS.get("cafeMedium"),Color.ORANGE));
-        Label l5 = new Label("n", new Label.LabelStyle(FlowFree.GAME_FONTS.get("cafeMedium"),Color.PINK));
-        Label l6 = new Label("s", new Label.LabelStyle(FlowFree.GAME_FONTS.get("cafeMedium"),Color.GRAY));
-        Label l7 = new Label("i", new Label.LabelStyle(FlowFree.GAME_FONTS.get("cafeMedium"),Color.WHITE));
-        Label l8 = new Label("o", new Label.LabelStyle(FlowFree.GAME_FONTS.get("cafeMedium"),Color.YELLOW));
-        Label l9 = new Label("n", new Label.LabelStyle(FlowFree.GAME_FONTS.get("cafeMedium"), Color.VIOLET));
-        Label l10 = new Label("s", new Label.LabelStyle(FlowFree.GAME_FONTS.get("cafeMedium"),Color.SALMON));
+        table.top().add(generateTitle()).center();
 
-
-        title.add(l1,l2,l3,l4,l5,l6,l7,l8,l9,l10);
-        title.setSize(Gdx.graphics.getWidth(),Gdx.graphics.getHeight()*0.1f);
+        //Creamos otra Tabla que cubra la pantalla porque no logro colocar las opciones en el medio
+        //con el titulo en el tope de la tabla.
+        //TODO: Implementar correctamente en una sola tabla
 
         Table options = new Table();
         options.setFillParent(true);
@@ -66,62 +67,55 @@ public class DimesionSelect implements Screen {
         for (final Integer n: FlowFree.picado.keySet()){
             String labelText = String.format("%d x %d",n,n);
             Gdx.app.log("color", cont + " : " + colorMap.get(cont));
-            Label label =  new Label(labelText,new Label.LabelStyle(FlowFree.GAME_FONTS.get("cafeSmall"),colorMap.get(cont)));
+            Label label =  new Label(labelText,new Label.LabelStyle(FlowFree.GAME_FONTS.get("cafeMedium"),colorMap.get(cont)));
             label.addListener(new ClickListener() {
                 @Override
                 public boolean touchDown(InputEvent event, float x, float y, int pointer, int button) {
-
+                    Gdx.app.log(TAG,"Touched dimension option");
                     DimesionSelect.this.game.setScreen(new MapSelect(DimesionSelect.this.game,FlowFree.picado.get(n)));
                     return true;
                 }
             });
             cont++;
-            options.add(label).row();
+            options.add(label).padBottom(10).row();
         }
 
-
-        Label backButton = new Label("<--", new Label.LabelStyle(FlowFree.GAME_FONTS.get("cafeSmall"),Color.WHITE));
-        title.setWidth(Gdx.graphics.getWidth());
-        backButton.addListener(new ClickListener() {
-            @Override
-            public boolean touchDown(InputEvent event, float x, float y, int pointer, int button) {
-                game.setScreen(new MainMenu(game));
-                System.out.println("Touched!");
-                return true;
-
-            }
-
-        });
-
-        Table back = new Table();
-        back.setFillParent(true);
-        back.add(backButton).expand().top().left();
-
-
-        table.add(title).expand().top();
-        table.row();
-
         stage.addActor(table);
-        stage.addActor(back);
         stage.addActor(options);
-
     }
 
+    private Table generateTitle() {
+        Table title = new Table();
 
-    @Override
-    public void show() {
-        Gdx.input.setInputProcessor(stage);
+        title.add(new Label("d", new Label.LabelStyle(FlowFree.GAME_FONTS.get("cafeBig"),Color.GREEN)));
+        title.add(new Label("i", new Label.LabelStyle(FlowFree.GAME_FONTS.get("cafeBig"),Color.WHITE)));
+        title.add(new Label("m", new Label.LabelStyle(FlowFree.GAME_FONTS.get("cafeBig"),Color.RED)));
+        title.add(new Label("e", new Label.LabelStyle(FlowFree.GAME_FONTS.get("cafeBig"),Color.ORANGE)));
+        title.add(new Label("n", new Label.LabelStyle(FlowFree.GAME_FONTS.get("cafeBig"),Color.PINK)));
+        title.add(new Label("s", new Label.LabelStyle(FlowFree.GAME_FONTS.get("cafeBig"),Color.GRAY)));
+        title.add(new Label("i", new Label.LabelStyle(FlowFree.GAME_FONTS.get("cafeBig"),Color.WHITE)));
+        title.add(new Label("o", new Label.LabelStyle(FlowFree.GAME_FONTS.get("cafeBig"),Color.YELLOW)));
+        title.add(new Label("n", new Label.LabelStyle(FlowFree.GAME_FONTS.get("cafeBig"), Color.VIOLET)));
+        title.add( new Label("s", new Label.LabelStyle(FlowFree.GAME_FONTS.get("cafeBig"),Color.SALMON)));
+
+        return title;
     }
 
     @Override
     public void render(float delta) {
+        //TODO: Cambiar esto por una manera mas elegante de lidiar con el backbutton
+        if (Gdx.input.isKeyPressed(Input.Keys.BACK)){
+            game.setScreen(new MainMenu(game));
+        }
+
         stage.act();
         stage.draw();
     }
 
     @Override
     public void resize(int width, int height) {
-
+        Gdx.app.log(TAG,"Resizing. New dimensions: " + width + "," + height);
+        stage.getViewport().update(width,height,true);
     }
 
     @Override

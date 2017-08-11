@@ -4,7 +4,6 @@ import com.badlogic.gdx.Game;
 import com.badlogic.gdx.Gdx;
 import com.badlogic.gdx.InputProcessor;
 import com.badlogic.gdx.graphics.GL20;
-import com.badlogic.gdx.graphics.OrthographicCamera;
 import com.badlogic.gdx.graphics.g2d.Animation;
 import com.badlogic.gdx.graphics.g2d.BitmapFont;
 import com.badlogic.gdx.graphics.g2d.TextureRegion;
@@ -35,7 +34,6 @@ public class FlowFree extends Game implements InputProcessor{
 		animaciones = new ArrayList<Animation<TextureRegion>>();
 		picado = new HashMap<Integer, ArrayList<Mapa>>();
 		rnd = new Random();
-		this.calculateGameScreen();
 		GAME_FONTS = new HashMap<String, BitmapFont>();
 
 		//*** ORANGE TTF GENERATOR ***
@@ -54,13 +52,15 @@ public class FlowFree extends Game implements InputProcessor{
 		FreeTypeFontGenerator.FreeTypeFontParameter parameter1 = new FreeTypeFontGenerator.FreeTypeFontParameter();
 		FreeTypeFontGenerator.FreeTypeFontParameter parameter2 = new FreeTypeFontGenerator.FreeTypeFontParameter();
 
-		parameter0.size = Gdx.graphics.getWidth()/5;
+		//TODO: Arreglar el tama;o de estos fonts
+		parameter0.size = 200;
 		GAME_FONTS.put("cafeBig",generator.generateFont(parameter0));
 		parameter1.size = Gdx.graphics.getWidth()/10;
 		GAME_FONTS.put("cafeMedium",generator.generateFont(parameter1));
 		parameter2.size = Gdx.graphics.getWidth()/12;
 		GAME_FONTS.put("cafeSmall",generator.generateFont(parameter2));
 		parameter2.size = Gdx.graphics.getWidth()/24;
+
 		GAME_FONTS.put("cafeSmallSmall", generator.generateFont(parameter2));
 
 
@@ -74,13 +74,7 @@ public class FlowFree extends Game implements InputProcessor{
 		Gdx.app.log("Loading_Animations","Finished loading");
 
 
-
-		OrthographicCamera camera = new OrthographicCamera(GAME_SCREEN_WIDTH,GAME_SCREEN_HEIGHT);
-		camera.setToOrtho(false,GAME_SCREEN_WIDTH,GAME_SCREEN_HEIGHT);
-		viewport = new StretchViewport(GAME_SCREEN_WIDTH,GAME_SCREEN_HEIGHT,camera);
-
 		renderer = new ShapeRenderer();
-		renderer.setProjectionMatrix(viewport.getCamera().combined);
 
 		MAPAS = MapLoader.load();
 		picarMapas();
@@ -95,11 +89,6 @@ public class FlowFree extends Game implements InputProcessor{
 		super.render();
 	}
 
-	public void calculateGameScreen() {
-		float aspectRatio = (float)Gdx.graphics.getHeight()/Gdx.graphics.getWidth();
-		GAME_SCREEN_WIDTH = 10;
-		GAME_SCREEN_HEIGHT = GAME_SCREEN_WIDTH * aspectRatio;
-	}
 
 	public void picarMapas(){
 		for (Mapa m: MAPAS) {
@@ -116,11 +105,12 @@ public class FlowFree extends Game implements InputProcessor{
 
 	@Override
 	public void dispose () {
-
+		super.dispose();
 	}
 
 	@Override
 	public void resize(int width, int height) {
+		super.resize(width,height);
 	}
 
 	@Override

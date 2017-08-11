@@ -22,7 +22,6 @@ import com.badlogic.gdx.utils.viewport.ScreenViewport;
  */
 
 public class LevelCompleted implements Screen {
-    private Label l;
     private Stage stage;
     private Game game;
     private Label.LabelStyle labelStyle;
@@ -124,7 +123,6 @@ public class LevelCompleted implements Screen {
             Animation<TextureRegion> anim = FlowFree.animaciones.get(FlowFree.rnd.nextInt(FlowFree.animaciones.size()));
             Firework f = new Firework(FlowFree.rnd.nextFloat()*Gdx.graphics.getWidth(),FlowFree.rnd.nextFloat()*Gdx.graphics.getHeight(),anim);
             stage.addActor(f);
-
         }
         stage.act();
         stage.draw();

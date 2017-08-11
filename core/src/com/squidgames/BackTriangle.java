@@ -20,8 +20,10 @@ public class BackTriangle extends Actor {
     private Screen screen;
     private Vector2 primerVertice;
     private Polygon triangle;
+    private ShapeRenderer shapeRenderer;
 
-    public BackTriangle(Vector2 primerVertice, float dLado, final GameScreen screen) {
+    public BackTriangle(Vector2 primerVertice, float dLado, final GameScreen screen, ShapeRenderer shapeRenderer) {
+        this.shapeRenderer = shapeRenderer;
         this.dLado = dLado;
         this.screen = screen;
         this.primerVertice = primerVertice;
@@ -44,11 +46,11 @@ public class BackTriangle extends Actor {
         //Vector2 primerVertice = new Vector2(0.25f,FlowFree.GAME_SCREEN_HEIGHT - 0.8f);
         Vector2 segundoVertice= new Vector2(primerVertice.x + dLado + 0.1f, primerVertice.y + dLado/2);
         Vector2 tercerVertice = new Vector2(segundoVertice.x,segundoVertice.y - dLado);
-        FlowFree.renderer.begin(ShapeRenderer.ShapeType.Filled);
-        FlowFree.renderer.setColor(Color.WHITE);
-        FlowFree.renderer.triangle(primerVertice.x,primerVertice.y,segundoVertice.x,segundoVertice.y,tercerVertice.x,tercerVertice.y);
-        FlowFree.renderer.rectLine(segundoVertice.x,segundoVertice.y - dLado/2,segundoVertice.x +0.5f,segundoVertice.y - dLado/2,primerVertice.x/2);
-        FlowFree.renderer.end();
+        shapeRenderer.begin(ShapeRenderer.ShapeType.Filled);
+        shapeRenderer.setColor(Color.WHITE);
+        shapeRenderer.triangle(primerVertice.x,primerVertice.y,segundoVertice.x,segundoVertice.y,tercerVertice.x,tercerVertice.y);
+        shapeRenderer.rectLine(segundoVertice.x,segundoVertice.y - dLado/2,segundoVertice.x +0.5f,segundoVertice.y - dLado/2,primerVertice.x/2);
+        shapeRenderer.end();
 
     }
 
