@@ -15,11 +15,13 @@ import com.badlogic.gdx.scenes.scene2d.utils.ClickListener;
  */
 
 public class Clave extends Casilla {
-
+    private String TAG = getClass().getSimpleName();
     private float espacioCasilla;
+    ShapeRenderer renderer;
 
     public Clave(int tableroI, int tableroJ, Color color, float espacioCasilla, boolean extremo) {
         super();
+        this.setDebug(true);
         this.setI(tableroI);
         this.setJ(tableroJ);
         this.espacioCasilla = espacioCasilla;
@@ -36,6 +38,41 @@ public class Clave extends Casilla {
             public boolean touchDown(InputEvent event, float x, float y, int pointer, int button) {
                 Vector2 basePosition = new Vector2(Gdx.input.getX(), Gdx.input.getY());
                 Gdx.app.log("IsConnected?", Clave.this.toString() + " - " + Clave.this.isConnected());
+                Clave.this.setLastTouchCasilla(Clave.this);
+                Clave.this.getLastTouchCasilla().liberar();
+                if (Clave.this.getLastTouchCasilla().getPareja() != null){
+                    Clave.this.getLastTouchCasilla().getPareja().liberar();
+                    Gdx.app.log("LIBERAR", Clave.this.getLastTouchCasilla().getPareja().toString());
+                }
+
+                return true;
+            }
+        });
+    }
+
+    public Clave(int tableroI, int tableroJ, Color color, float espacioCasilla, boolean extremo, ShapeRenderer renderer) {
+        super();
+        this.renderer = renderer;
+        this.setI(tableroI);
+        this.setJ(tableroJ);
+        this.espacioCasilla = espacioCasilla;
+        this.setOrigin(0,0);
+        this.setCircle(new Circle(0,0,0));
+        if (color != null)
+            this.setColor(color);
+        else
+            this.setColor(new Color());
+
+        this.setExtremo(extremo);
+        this.addListener(new ClickListener(){
+            @Override
+            public boolean touchDown(InputEvent event, float x, float y, int pointer, int button) {
+                Vector2 basePosition = new Vector2(Gdx.input.getX(), Gdx.input.getY());
+                Vector2 traduced = getStage().screenToStageCoordinates(basePosition);
+
+                Gdx.app.log("IsConnected?", Clave.this.toString() + " - " + Clave.this.isConnected());
+                Gdx.app.log(TAG,"Touch pos: " +traduced.x + "," + traduced.y + " PreTraduced: " + basePosition.x + "," + basePosition.y);
+
                 Clave.this.setLastTouchCasilla(Clave.this);
                 Clave.this.getLastTouchCasilla().liberar();
                 if (Clave.this.getLastTouchCasilla().getPareja() != null){
@@ -67,6 +104,19 @@ public class Clave extends Casilla {
 
     @Override
     public void draw(Batch batch, float parentAlpha) {
+        renderer.setColor(this.getColor());
+        renderer.begin(ShapeRenderer.ShapeType.Filled);
+        renderer.circle(this.getCircle().x, this.getCircle().y, this.getCircle().radius, 100);
+        renderer.end();
+
+        if (this.getSucesor() != null) {
+            renderer.begin(ShapeRenderer.ShapeType.Filled);
+            renderer.setColor(this.getColor());
+            renderer.rectLine(this.getOriginX()+ this.getWidth()/2,this.getOriginY()+ this.getWidth()/2,
+                    getSucesor().getOriginX() + this.getWidth()/2,getSucesor().getOriginY() + this.getWidth()/2,this.getWidth()/3f);
+            renderer.end();
+        }
+        /*
         FlowFree.renderer.setColor(this.getColor());
         FlowFree.renderer.begin(ShapeRenderer.ShapeType.Filled);
         FlowFree.renderer.circle(this.getCircle().x, this.getCircle().y, this.getCircle().radius, 100);
@@ -78,9 +128,8 @@ public class Clave extends Casilla {
             FlowFree.renderer.rectLine(this.getOriginX()+ this.getWidth()/2,this.getOriginY()+ this.getWidth()/2,
                     getSucesor().getOriginX() + this.getWidth()/2,getSucesor().getOriginY() + this.getWidth()/2,this.getWidth()/3f);
             FlowFree.renderer.end();
-        }
+        }*/
     }
-
 
     @Override
     public void ejecutarMovimiento(Casilla objetivo){
@@ -88,12 +137,12 @@ public class Clave extends Casilla {
             Casilla lastTouchClave = this.getLastTouchCasilla();
             //No permitir movernos a claves extremos de diferente color
             if (objetivo.isExtremo() && lastTouchClave.getPareja() != null && !lastTouchClave.getColor().equals(objetivo.getColor())) {
-                Gdx.app.log("Movimiento","No te puedes mover a una clave de diferente color!");
+                Gdx.app.log(TAG,"No te puedes mover a una clave de diferente color!");
                 return;
             }
 
             if (lastTouchClave.isExtremo() && lastTouchClave.getPredecesor() != null) {
-                Gdx.app.log("Unknown","Class: Clave. Line: 81");
+                Gdx.app.log(TAG,"Camino completado, levanta el dedo!");
                 return;
             }
 
@@ -134,28 +183,30 @@ public class Clave extends Casilla {
 
     public Casilla getObjetivo(Vector2 current) {
         //NOTA: El parametro current se considera traducido, es decir, se considera que ya esta pasado a coordenadas del stage
-
         Casilla lastTouchClave = this.getLastTouchCasilla();
         Casilla objetivo = null;
+
         if (current.x >= lastTouchClave.getOriginX() + espacioCasilla && current.y <= lastTouchClave.getOriginY() + espacioCasilla) {
-            //Accederiamos a el hashtable con la clave 2 y checkeamos si la clave que nos devuelve
-            //contiene a la posicion actual (dragged)
+            Gdx.app.log(TAG,"Saliendo por Lado 2");
             objetivo = lastTouchClave.getVecinos().get(2);
         }
 
         if (current.x < lastTouchClave.getOriginX() && current.y <= lastTouchClave.getOriginY() + espacioCasilla) {
+            Gdx.app.log(TAG,"Saliendo por Lado 4");
             objetivo = lastTouchClave.getVecinos().get(4);
         }
 
         if (current.x <= lastTouchClave.getOriginX() + espacioCasilla
                 && current.x >= lastTouchClave.getOriginX()
                 && current.y > lastTouchClave.getOriginY() + espacioCasilla) {
+            Gdx.app.log(TAG,"Saliendo por Lado 1");
             objetivo = lastTouchClave.getVecinos().get(1);
         }
 
         if (current.x <= lastTouchClave.getOriginX() + espacioCasilla
                 && current.x >= lastTouchClave.getOriginX()
                 && current.y < lastTouchClave.getOriginY()) {
+            Gdx.app.log(TAG,"Saliendo por Lado 3");
             objetivo = lastTouchClave.getVecinos().get(3);
         }
 

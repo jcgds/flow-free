@@ -43,7 +43,8 @@ public class FlowFree extends Game implements InputProcessor{
 		*/
 
 		renderer = new ShapeRenderer();
-		this.setScreen(new LoadingScreen(this,assetHandler));
+		//this.setScreen(new LoadingScreen(this,assetHandler));
+		this.setScreen(new GameScreenv2());
 	}
 
 	@Override

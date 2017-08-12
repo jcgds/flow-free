@@ -163,7 +163,7 @@ public abstract class Casilla extends Actor{
             public void touchDragged(InputEvent event, float x, float y, int pointer) {
                 Vector2 basePosition = new Vector2(Gdx.input.getX(), Gdx.input.getY());
                 Vector2 traduced = Casilla.this.getStage().screenToStageCoordinates(basePosition);
-
+                Gdx.app.log("DEBUGgggg",traduced.x + "," + traduced.y);
                 if (lastTouchCasilla == null) {
                     Gdx.app.log("DRAG", "LastTouch is NULL");
                     return;
