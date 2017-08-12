@@ -7,9 +7,7 @@ import com.badlogic.gdx.graphics.GL20;
 import com.badlogic.gdx.graphics.g2d.Animation;
 import com.badlogic.gdx.graphics.g2d.BitmapFont;
 import com.badlogic.gdx.graphics.g2d.TextureRegion;
-import com.badlogic.gdx.graphics.g2d.freetype.FreeTypeFontGenerator;
 import com.badlogic.gdx.graphics.glutils.ShapeRenderer;
-import com.badlogic.gdx.utils.viewport.StretchViewport;
 
 import java.util.ArrayList;
 import java.util.HashMap;
@@ -18,17 +16,14 @@ import java.util.Random;
 public class FlowFree extends Game implements InputProcessor{
 	public static Random rnd;
 	public static ShapeRenderer renderer;
-	private static StretchViewport viewport;
 	static float GAME_SCREEN_WIDTH;
 	static float GAME_SCREEN_HEIGHT;
-	static float DEVICE_TO_GAME_RATIO;
-	public static BitmapFont fontBig,fontMedium;
 	public static HashMap<String,BitmapFont> GAME_FONTS;
 	public static ArrayList<Animation<TextureRegion>> animaciones;
 	public static ArrayList<Mapa> MAPAS;
 	public static HashMap<Integer,ArrayList<Mapa>> picado;
 
-
+	AssetHandler assetHandler;
 	@Override
 	public void create () {
 		animaciones = new ArrayList<Animation<TextureRegion>>();
@@ -36,51 +31,19 @@ public class FlowFree extends Game implements InputProcessor{
 		rnd = new Random();
 		GAME_FONTS = new HashMap<String, BitmapFont>();
 
-		//*** ORANGE TTF GENERATOR ***
-		FreeTypeFontGenerator generator = new FreeTypeFontGenerator(Gdx.files.internal("Fonts/orange.ttf"));
-		FreeTypeFontGenerator.FreeTypeFontParameter parameter =  new FreeTypeFontGenerator.FreeTypeFontParameter();
+		assetHandler = new AssetHandler();
+		assetHandler.load();
 
-		parameter.size = (int)(Gdx.graphics.getWidth()/6f);
-		GAME_FONTS.put("orangeBig",generator.generateFont(parameter));
-
-		parameter.size = (int)(Gdx.graphics.getWidth()/8f);
-		GAME_FONTS.put("orangeMedium",generator.generateFont(parameter));
-
-		//*** CAFE TTF GENERATOR ***
-		generator = new FreeTypeFontGenerator(Gdx.files.internal("Fonts/cafe.ttf"));
-		FreeTypeFontGenerator.FreeTypeFontParameter parameter0= new FreeTypeFontGenerator.FreeTypeFontParameter();
-		FreeTypeFontGenerator.FreeTypeFontParameter parameter1 = new FreeTypeFontGenerator.FreeTypeFontParameter();
-		FreeTypeFontGenerator.FreeTypeFontParameter parameter2 = new FreeTypeFontGenerator.FreeTypeFontParameter();
-
-		//TODO: Arreglar el tama;o de estos fonts
-		parameter0.size = 200;
-		GAME_FONTS.put("cafeBig",generator.generateFont(parameter0));
-		parameter1.size = Gdx.graphics.getWidth()/10;
-		GAME_FONTS.put("cafeMedium",generator.generateFont(parameter1));
-		parameter2.size = Gdx.graphics.getWidth()/12;
-		GAME_FONTS.put("cafeSmall",generator.generateFont(parameter2));
-		parameter2.size = Gdx.graphics.getWidth()/24;
-
-		GAME_FONTS.put("cafeSmallSmall", generator.generateFont(parameter2));
-
-
-		Gdx.app.log("Loading_Animations","Starting to load...");
-
+		//TODO: Crear ParticleEffect que reemplaze estas animaciones, hacerlo con el AssetManager!
+		/*
 		animaciones = new ArrayList<Animation<TextureRegion>>();
 		animaciones.add(GifDecoder.loadGIFAnimation(Animation.PlayMode.NORMAL,Gdx.files.internal("fireworkYellow.gif").read()));
 		animaciones.add(GifDecoder.loadGIFAnimation(Animation.PlayMode.NORMAL,Gdx.files.internal("fireworkGreen.gif").read()));
 		animaciones.add(GifDecoder.loadGIFAnimation(Animation.PlayMode.NORMAL,Gdx.files.internal("fireworkMorado.gif").read()));
-
-		Gdx.app.log("Loading_Animations","Finished loading");
-
+		*/
 
 		renderer = new ShapeRenderer();
-
-		MAPAS = MapLoader.load();
-		picarMapas();
-
-		this.setScreen(new MainMenu(this));
-
+		this.setScreen(new LoadingScreen(this,assetHandler));
 	}
 
 	@Override
@@ -90,7 +53,7 @@ public class FlowFree extends Game implements InputProcessor{
 	}
 
 
-	public void picarMapas(){
+	public static void picarMapas(){
 		for (Mapa m: MAPAS) {
 			Gdx.app.log("MAP","" + m + "  Dimension: " + m.getDimension());
 			if (picado.get(m.getDimension()) == null){
