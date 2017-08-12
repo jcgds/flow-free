@@ -45,7 +45,15 @@ public class LoadingScreen extends ScreenAdapter {
             FlowFree.GAME_FONTS.put("orangeMedium", assetHandler.manager.get("orangeMedium.ttf",BitmapFont.class));
             FlowFree.GAME_FONTS.put("orangeSmall", assetHandler.manager.get("orangeSmall.ttf",BitmapFont.class));
 
-            game.setScreen(new MainMenu(game));
+            //game.setScreen(new MainMenu(game));
+            game.setScreen(new GameModeScreen(game));
         }
+    }
+
+    @Override
+    public void dispose() {
+        super.dispose();
+        batch.dispose();
+        logo.dispose();
     }
 }

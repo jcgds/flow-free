@@ -3,7 +3,8 @@ package com.squidgames;
 import com.badlogic.gdx.Game;
 import com.badlogic.gdx.Gdx;
 import com.badlogic.gdx.Input;
-import com.badlogic.gdx.Screen;
+import com.badlogic.gdx.ScreenAdapter;
+import com.badlogic.gdx.files.FileHandle;
 import com.badlogic.gdx.graphics.Color;
 import com.badlogic.gdx.graphics.OrthographicCamera;
 import com.badlogic.gdx.scenes.scene2d.InputEvent;
@@ -21,16 +22,17 @@ import java.util.HashMap;
  * Created by juan_ on 13-Jul-17.
  */
 
-public class MapSelect implements Screen {
+public class MapSelect extends ScreenAdapter {
     private final String TAG = getClass().getSimpleName();
     Stage stage;
     Game game;
     HashMap<Integer,Color> colorMap;
     private final float MENU_WIDTH = 1080.00f;
     private final float MENU_HEIGHT = 1920.00f;
-    private ArrayList<Mapa> content;
+    private FileHandle MAP_FOLDER;
 
-    public MapSelect(final Game game, ArrayList<Mapa> mapas) {
+
+    public MapSelect(final Game game, FileHandle MapFolder) {
 
         //region ColorMap
         colorMap = new HashMap<Integer, Color>();
@@ -46,8 +48,7 @@ public class MapSelect implements Screen {
         //endregion
 
         this.game = game;
-        this.content = mapas;
-
+        this.MAP_FOLDER = MapFolder;
     }
 
 
@@ -64,30 +65,25 @@ public class MapSelect implements Screen {
 
         table.top().add(generateTitle());
 
-        //Creamos otra Tabla que cubra la pantalla porque no logro colocar las opciones en el medio
-        //con el titulo en el tope de la tabla.
-        //TODO: Implementar correctamente en una sola tabla
+        ArrayList<Mapa> content = new ArrayList<Mapa>();
+        FileHandle[] jsonMaps = MAP_FOLDER.list();
 
         Table options = new Table();
         options.setFillParent(true);
 
-        int cont=1;
-        for (final Mapa n: content){
-            String labelText = String.format("Mapa %d",cont);
-            if (n instanceof TableroHexagonos)
-                labelText = String.format("Mapa %d Hex",cont);
-            Label label =  new Label(labelText,new Label.LabelStyle(FlowFree.GAME_FONTS.get("cafeMedium"),colorMap.get(cont)));
-            label.addListener(new ClickListener(){
+        for (final FileHandle fileHandle: jsonMaps) {
+            Label label = new Label(fileHandle.nameWithoutExtension(),new Label.LabelStyle(FlowFree.GAME_FONTS.get("cafeMedium"), Color.WHITE));
+            label.addListener(new ClickListener() {
                 @Override
                 public boolean touchDown(InputEvent event, float x, float y, int pointer, int button) {
-                    Gdx.app.log(TAG,"Map selected");
-                    MapSelect.this.game.setScreen(new GameScreen(MapSelect.this.game,n,true));
+                    Gdx.app.log(TAG,"Selected map: " + fileHandle.name());
+                    game.setScreen(new GameScreenv2(fileHandle));
                     return true;
                 }
             });
-            cont++;
-            options.add(label).padBottom(10).row();
+            options.add(label).row();
         }
+
 
         stage.addActor(table);
         stage.addActor(options);
@@ -106,6 +102,8 @@ public class MapSelect implements Screen {
 
     @Override
     public void render(float delta) {
+        FlowFree.clearScreen();
+
         //TODO: Cambiar esto por una manera mas elegante de lidiar con el backbutton. Bugged: Me lleva directamente el mainMenu
         //Sucede porque el boton back sigue presionado cuando creamos el nuevo DimensionSelect y por lo tanto pela
 
@@ -122,20 +120,6 @@ public class MapSelect implements Screen {
         stage.getViewport().update(width,height,true);
     }
 
-    @Override
-    public void pause() {
-
-    }
-
-    @Override
-    public void resume() {
-
-    }
-
-    @Override
-    public void hide() {
-
-    }
 
     @Override
     public void dispose() {

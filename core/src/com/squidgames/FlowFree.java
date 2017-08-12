@@ -15,7 +15,9 @@ import java.util.Random;
 
 public class FlowFree extends Game implements InputProcessor{
 	public static Random rnd;
+	//TODO: Borrar este renderer
 	public static ShapeRenderer renderer;
+	//Todo: Borrar estas dimensiones, despues de independizar a TableroHexagonos
 	static float GAME_SCREEN_WIDTH;
 	static float GAME_SCREEN_HEIGHT;
 	public static HashMap<String,BitmapFont> GAME_FONTS;
@@ -43,16 +45,15 @@ public class FlowFree extends Game implements InputProcessor{
 		*/
 
 		renderer = new ShapeRenderer();
-		//this.setScreen(new LoadingScreen(this,assetHandler));
-		this.setScreen(new GameScreenv2());
+		this.setScreen(new LoadingScreen(this,assetHandler));
+		//this.setScreen(new GameScreenv2());
+		//this.setScreen(new GameModeScreen(this));
 	}
 
-	@Override
-	public void render () {
+	public static void clearScreen() {
+		Gdx.gl.glClearColor(0,0,0,1);
 		Gdx.gl.glClear(GL20.GL_COLOR_BUFFER_BIT);
-		super.render();
 	}
-
 
 	public static void picarMapas(){
 		for (Mapa m: MAPAS) {

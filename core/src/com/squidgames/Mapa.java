@@ -14,6 +14,8 @@ import java.util.HashMap;
  * Extiende actor para que podamos dibujar el grid primero y despues las conecciones queden por encima del grid
  */
 
+//TODO: Implementar aqui la parte del constructor con fileHandle o algo por ele stilo para poder conectar los mapas de otros tipos
+
 public abstract class Mapa extends Actor{
     private int dimension;
     private ArrayList<Casilla> casillas;

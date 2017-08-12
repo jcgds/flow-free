@@ -72,7 +72,7 @@ public class DimesionSelect implements Screen {
                 @Override
                 public boolean touchDown(InputEvent event, float x, float y, int pointer, int button) {
                     Gdx.app.log(TAG,"Touched dimension option");
-                    DimesionSelect.this.game.setScreen(new MapSelect(DimesionSelect.this.game,FlowFree.picado.get(n)));
+                    //DimesionSelect.this.game.setScreen(new MapSelect(DimesionSelect.this.game,FlowFree.picado.get(n)));
                     return true;
                 }
             });

@@ -35,7 +35,8 @@ public class BackTriangle extends Actor {
             @Override
             public boolean touchDown(InputEvent event, float x, float y, int pointer, int button) {
                 int clave = screen.getMap().getDimension();
-                screen.getGame().setScreen(new MapSelect(screen.getGame(),FlowFree.picado.get(clave)));
+                //Todo: Update this, or delete it
+                //screen.getGame().setScreen(new MapSelect(screen.getGame(),FlowFree.picado.get(clave)));
                 return true;
             }
         });

@@ -13,8 +13,6 @@ import com.badlogic.gdx.scenes.scene2d.ui.Table;
 import com.badlogic.gdx.utils.viewport.FitViewport;
 import com.badlogic.gdx.utils.viewport.Viewport;
 
-import static com.badlogic.gdx.Gdx.files;
-
 /**
  * Created by juan_ on 12-Aug-17.
  */
@@ -50,7 +48,7 @@ public class GameScreenv2 extends ScreenAdapter {
         Label l = new Label("Jugando flow free",new Label.LabelStyle(font, Color.WHITE));
         textorg.add(l);
 
-        TableroCuadros t = new TableroCuadros(files.internal("Mapas\\MapasCuadrados\\mapa3.json"),renderer);
+        TableroCuadros t = new TableroCuadros(fileHandle,renderer);
         t.addToStage(mapStage);
         textStage.addActor(textorg);
     }
@@ -62,6 +60,7 @@ public class GameScreenv2 extends ScreenAdapter {
 
     @Override
     public void render(float delta) {
+        FlowFree.clearScreen();
         renderer.setProjectionMatrix(textStage.getViewport().getCamera().combined);
         textStage.draw();
         renderer.setProjectionMatrix(mapStage.getViewport().getCamera().combined);

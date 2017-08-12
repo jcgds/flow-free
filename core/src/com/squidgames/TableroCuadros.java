@@ -23,7 +23,7 @@ import java.util.HashMap;
 public class TableroCuadros extends Mapa {
     private float espacioCasilla;
     private float LINE_WIDTH = 3;
-    ShapeRenderer renderer;
+    private ShapeRenderer renderer;
     private float SCREEN_WIDTH = 10;
     private float SCREEN_HEIGHT = 18;
     private float PADDING = 0.25f;
