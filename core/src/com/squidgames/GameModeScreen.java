@@ -2,7 +2,6 @@ package com.squidgames;
 
 import com.badlogic.gdx.Game;
 import com.badlogic.gdx.Gdx;
-import com.badlogic.gdx.ScreenAdapter;
 import com.badlogic.gdx.files.FileHandle;
 import com.badlogic.gdx.graphics.Color;
 import com.badlogic.gdx.scenes.scene2d.InputEvent;
@@ -17,18 +16,17 @@ import com.badlogic.gdx.utils.viewport.Viewport;
  * Created by juan_ on 12-Aug-17.
  */
 
-public class GameModeScreen extends ScreenAdapter {
+public class GameModeScreen extends BaseScene {
     private final String TAG = getClass().getSimpleName();
     private final String TITLE = "Select Game mode";
     private float SCREEN_WIDTH = 1080;
     private float SCREEN_HEIGHT = 1920;
-    FileHandle MAP_FOLDER;
-    FileHandle[] GAME_MODES;
-    Game game;
-    Stage stage;
+    private FileHandle MAP_FOLDER;
+    private FileHandle[] GAME_MODES;
+    private Stage stage;
 
     public GameModeScreen(Game game) {
-        this.game = game;
+        super(game);
         Viewport viewport = new FitViewport(SCREEN_WIDTH,SCREEN_HEIGHT);
         stage = new Stage(viewport);
 
@@ -68,7 +66,7 @@ public class GameModeScreen extends ScreenAdapter {
 
     @Override
     public void render(float delta) {
-        FlowFree.clearScreen();
+        super.render(delta);
         stage.act();
         stage.draw();
     }
@@ -81,5 +79,10 @@ public class GameModeScreen extends ScreenAdapter {
     @Override
     public void show() {
         Gdx.input.setInputProcessor(stage);
+    }
+
+    @Override
+    protected void handleKeyBack() {
+        game.setScreen( new MainMenu(game));
     }
 }

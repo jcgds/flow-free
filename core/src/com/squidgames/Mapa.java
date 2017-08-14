@@ -45,9 +45,9 @@ public abstract class Mapa extends Actor{
     public Mapa() {
         //TODO: Quitar esta dependencia por el las variables GAME_SCREEN HEIGHT y WIDTH, pues estan semi-deprecated
         //Esquina inferior izquierda, donde debe comenzar a dibujarse el tablero para que quede centrado verticalmente
-        this.origin = new Vector2(0,FlowFree.GAME_SCREEN_HEIGHT/2 - FlowFree.GAME_SCREEN_WIDTH/2);
+        //this.origin = new Vector2(0,FlowFree.GAME_SCREEN_HEIGHT/2 - FlowFree.GAME_SCREEN_WIDTH/2);
         //Esquina superior derecha, representa la maxima X e Y que puede utilizarse, es decir, maximas coordenadas del Mapa
-        this.end = new Vector2(FlowFree.GAME_SCREEN_WIDTH,origin.y + FlowFree.GAME_SCREEN_WIDTH);
+        //this.end = new Vector2(FlowFree.GAME_SCREEN_WIDTH,origin.y + FlowFree.GAME_SCREEN_WIDTH);
 
         colorMap = new HashMap<String, Color>();
         //region Agregar valores/colores a colorMap

@@ -2,10 +2,7 @@ package com.squidgames;
 
 import com.badlogic.gdx.Game;
 import com.badlogic.gdx.Gdx;
-import com.badlogic.gdx.Input;
-import com.badlogic.gdx.Screen;
 import com.badlogic.gdx.graphics.Color;
-import com.badlogic.gdx.graphics.GL20;
 import com.badlogic.gdx.graphics.OrthographicCamera;
 import com.badlogic.gdx.scenes.scene2d.InputEvent;
 import com.badlogic.gdx.scenes.scene2d.Stage;
@@ -19,16 +16,14 @@ import com.badlogic.gdx.utils.viewport.Viewport;
  * Created by juan_ on 11-Aug-17.
  */
 
-public class MainMenu implements Screen {
+public class MainMenu extends BaseScene {
     private final String TAG = getClass().getSimpleName();
     private final float MENU_WIDTH = 1080.00f;
     private final float MENU_HEIGHT = 1920.00f;
-
-    Game game;
     Stage stage;
 
     public MainMenu(Game game) {
-        this.game = game;
+        super(game);
     }
 
     @Override
@@ -68,37 +63,22 @@ public class MainMenu implements Screen {
 
     @Override
     public void render(float delta) {
-        Gdx.gl.glClearColor(0, 0, 0, 1);
-        Gdx.gl.glClear(GL20.GL_COLOR_BUFFER_BIT);
-
-        //TODO: Cambiar esto por una manera mas elegante de lidiar con el backbutton
-        if (Gdx.input.isKeyPressed(Input.Keys.BACK)){
-            Gdx.input.setCatchBackKey(false);
-        }
-
+       super.render(delta);
+        FlowFree.clearScreen();
         stage.act();
         stage.draw();
+    }
+
+    @Override
+    protected void handleKeyBack() {
+        game.dispose();
+        Gdx.app.exit();
     }
 
     @Override
     public void resize(int width, int height) {
         Gdx.app.log(TAG,"Resizing. New dimensions: " + width + "," + height);
         stage.getViewport().update(width,height,true);
-    }
-
-    @Override
-    public void pause() {
-
-    }
-
-    @Override
-    public void resume() {
-
-    }
-
-    @Override
-    public void hide() {
-
     }
 
     @Override

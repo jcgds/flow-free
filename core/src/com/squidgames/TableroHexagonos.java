@@ -50,7 +50,7 @@ public class TableroHexagonos extends Mapa {
         this.renderer = renderer;
 
         Y_CENTER = (SCREEN_HEIGHT - SCREEN_WIDTH)/2 + PADDING;
-        X_CENTER = PADDING;
+        X_CENTER = 0;
         this.setOrigin(X_CENTER,Y_CENTER);
 
         JSONParser parser = new JSONParser();
@@ -77,7 +77,7 @@ public class TableroHexagonos extends Mapa {
             float yMove = SCREEN_HEIGHT - this.getOriginY() - dCentroEsquina*2;
             Gdx.app.log(TAG,String.format("Origin Y: %f   yMove: %f",this.getOriginY(),yMove));
 
-            float xMove = this.getOrigin().x + 0.2f;
+            float xMove = this.getOriginX() + 0.2f;
 
             ArrayList<Casilla> finalAtt = new ArrayList<Casilla>();
             boolean odd = false;
@@ -117,7 +117,7 @@ public class TableroHexagonos extends Mapa {
 
 
                 if (odd) {
-                    xMove = this.getOrigin().x + 0.2f;
+                    xMove = this.getOriginX() + 0.2f;
                     odd = false;
                 } else  {
                     xMove = Hexagono.calculateWidth(dCentroEsquina)/2 + 0.2f;

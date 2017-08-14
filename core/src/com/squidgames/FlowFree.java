@@ -7,7 +7,6 @@ import com.badlogic.gdx.graphics.GL20;
 import com.badlogic.gdx.graphics.g2d.Animation;
 import com.badlogic.gdx.graphics.g2d.BitmapFont;
 import com.badlogic.gdx.graphics.g2d.TextureRegion;
-import com.badlogic.gdx.graphics.glutils.ShapeRenderer;
 
 import java.util.ArrayList;
 import java.util.HashMap;
@@ -15,11 +14,7 @@ import java.util.Random;
 
 public class FlowFree extends Game implements InputProcessor{
 	public static Random rnd;
-	//TODO: Borrar este renderer
-	public static ShapeRenderer renderer;
-	//Todo: Borrar estas dimensiones, despues de independizar a TableroHexagonos
-	static float GAME_SCREEN_WIDTH;
-	static float GAME_SCREEN_HEIGHT;
+
 	public static HashMap<String,BitmapFont> GAME_FONTS;
 	public static ArrayList<Animation<TextureRegion>> animaciones;
 	public static ArrayList<Mapa> MAPAS;
@@ -36,15 +31,6 @@ public class FlowFree extends Game implements InputProcessor{
 		assetHandler = new AssetHandler();
 		assetHandler.load();
 
-		//TODO: Crear ParticleEffect que reemplaze estas animaciones, hacerlo con el AssetManager!
-		/*
-		animaciones = new ArrayList<Animation<TextureRegion>>();
-		animaciones.add(GifDecoder.loadGIFAnimation(Animation.PlayMode.NORMAL,Gdx.files.internal("fireworkYellow.gif").read()));
-		animaciones.add(GifDecoder.loadGIFAnimation(Animation.PlayMode.NORMAL,Gdx.files.internal("fireworkGreen.gif").read()));
-		animaciones.add(GifDecoder.loadGIFAnimation(Animation.PlayMode.NORMAL,Gdx.files.internal("fireworkMorado.gif").read()));
-		*/
-
-		renderer = new ShapeRenderer();
 		this.setScreen(new LoadingScreen(this,assetHandler));
 	}
 

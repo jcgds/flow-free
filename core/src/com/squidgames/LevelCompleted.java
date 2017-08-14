@@ -2,7 +2,7 @@ package com.squidgames;
 
 import com.badlogic.gdx.Game;
 import com.badlogic.gdx.Gdx;
-import com.badlogic.gdx.Screen;
+import com.badlogic.gdx.files.FileHandle;
 import com.badlogic.gdx.graphics.Color;
 import com.badlogic.gdx.scenes.scene2d.InputEvent;
 import com.badlogic.gdx.scenes.scene2d.Stage;
@@ -19,18 +19,19 @@ import com.badlogic.gdx.utils.viewport.FitViewport;
  * Created by juan_ on 09-Jul-17.
  */
 
-public class LevelCompleted implements Screen {
+public class LevelCompleted extends BaseScene {
     private Stage stage;
-    private Game game;
     private Label.LabelStyle labelStyle;
     private Label[] message = new Label[14];
     private Mapa map;
     private Table firstLine, secondLine;
+    private FileHandle MAP_FOLDER;
 
-    public LevelCompleted(Game game, Mapa mapa){
+    public LevelCompleted(Game game, Mapa mapa, FileHandle MAP_FOLDER){
+        super(game);
+        this.MAP_FOLDER = MAP_FOLDER;
         this.map = mapa;
         stage = new Stage(new FitViewport(Gdx.graphics.getWidth(),Gdx.graphics.getHeight()));
-        this.game = game;
 
         labelStyle = new Label.LabelStyle();
         labelStyle.font = FlowFree.GAME_FONTS.get("orangeBig");
@@ -112,6 +113,7 @@ public class LevelCompleted implements Screen {
 
     @Override
     public void render(float delta) {
+        super.render(delta);
         FlowFree.clearScreen();
 
         stage.act();
@@ -119,23 +121,13 @@ public class LevelCompleted implements Screen {
     }
 
     @Override
+    protected void handleKeyBack() {
+        game.setScreen(new MapSelect(game,MAP_FOLDER));
+    }
+
+    @Override
     public void resize(int width, int height) {
         stage.getViewport().update(width,height,true);
-    }
-
-    @Override
-    public void pause() {
-
-    }
-
-    @Override
-    public void resume() {
-
-    }
-
-    @Override
-    public void hide() {
-
     }
 
     @Override

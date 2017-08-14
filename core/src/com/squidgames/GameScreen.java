@@ -2,8 +2,6 @@ package com.squidgames;
 
 import com.badlogic.gdx.Game;
 import com.badlogic.gdx.Gdx;
-import com.badlogic.gdx.ScreenAdapter;
-import com.badlogic.gdx.assets.AssetManager;
 import com.badlogic.gdx.files.FileHandle;
 import com.badlogic.gdx.graphics.Color;
 import com.badlogic.gdx.graphics.g2d.BitmapFont;
@@ -18,22 +16,21 @@ import com.badlogic.gdx.utils.viewport.Viewport;
  * Created by juan_ on 12-Aug-17.
  */
 
-//TODO: Modificar los Screens DimesionSelect y MapSelect, deberia hacer una pantalla que permita seleccionar entre hexagonos o cuadrados
-public class GameScreen extends ScreenAdapter {
+public class GameScreen extends BaseScene {
     private float GAME_HEIGHT = 18;
     private float GAME_WIDTH = 10;
     private float MENU_WIDTH = 1080;
     private float MENU_HEIGHT = 1920;
     private float GAME_PAD = 1;
-    AssetManager manager;
     Stage textStage;
     Stage mapStage;
     ShapeRenderer renderer;
     Mapa gameMap;
-    Game game;
+    FileHandle MAP_FOLDER;
 
-    public GameScreen(Game game, FileHandle fileHandle, String mapType) {
-        this.game = game;
+    public GameScreen(Game game, FileHandle fileHandle, FileHandle MAP_FOLDER) {
+        super(game);
+        this.MAP_FOLDER = MAP_FOLDER;
         renderer = new ShapeRenderer();
         Viewport textViewport = new FitViewport(MENU_WIDTH,MENU_HEIGHT);
         textStage = new Stage(textViewport);
@@ -52,9 +49,9 @@ public class GameScreen extends ScreenAdapter {
         textorg.add(l);
 
         //TODO: Crear una buena capa de abstraccion que me permita crear un nuevo mapa solo pasandole un filehandle
-        if (mapType.equals("MapasCuadrados"))
+        if (MAP_FOLDER.name().equals("MapasCuadrados"))
             gameMap = new TableroCuadros(fileHandle,renderer);
-        else if (mapType.equals("MapasHexagonales")) {
+        else if (MAP_FOLDER.name().equals("MapasHexagonales")) {
             gameMap= new TableroHexagonos(fileHandle,renderer);
         } else
             gameMap = null;
@@ -71,16 +68,21 @@ public class GameScreen extends ScreenAdapter {
 
     @Override
     public void render(float delta) {
+        super.render(delta);
         FlowFree.clearScreen();
         if (gameMap.isCompleted()) {
-            game.setScreen(new LevelCompleted(game,gameMap));
+            game.setScreen(new LevelCompleted(game,gameMap,MAP_FOLDER));
         }
         renderer.setProjectionMatrix(textStage.getViewport().getCamera().combined);
         textStage.draw();
         renderer.setProjectionMatrix(mapStage.getViewport().getCamera().combined);
-        FlowFree.renderer.setProjectionMatrix(mapStage.getViewport().getCamera().combined);
         mapStage.act();
         mapStage.draw();
+    }
+
+    @Override
+    protected void handleKeyBack() {
+        game.setScreen(new MapSelect(game,MAP_FOLDER));
     }
 
     @Override
