@@ -77,7 +77,7 @@ public class MapSelect extends ScreenAdapter {
                 @Override
                 public boolean touchDown(InputEvent event, float x, float y, int pointer, int button) {
                     Gdx.app.log(TAG,"Selected map: " + fileHandle.name());
-                    game.setScreen(new GameScreenv2(fileHandle));
+                    game.setScreen(new GameScreen(game,fileHandle, MAP_FOLDER.name()));
                     return true;
                 }
             });
@@ -108,7 +108,7 @@ public class MapSelect extends ScreenAdapter {
         //Sucede porque el boton back sigue presionado cuando creamos el nuevo DimensionSelect y por lo tanto pela
 
         if (Gdx.input.isKeyPressed(Input.Keys.BACK)){
-            game.setScreen(new DimesionSelect(game));
+            game.setScreen(new GameModeScreen(game));
         }
 
         stage.act();

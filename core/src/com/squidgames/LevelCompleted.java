@@ -13,7 +13,7 @@ import com.badlogic.gdx.scenes.scene2d.actions.SequenceAction;
 import com.badlogic.gdx.scenes.scene2d.ui.Label;
 import com.badlogic.gdx.scenes.scene2d.ui.Table;
 import com.badlogic.gdx.scenes.scene2d.utils.ClickListener;
-import com.badlogic.gdx.utils.viewport.ScreenViewport;
+import com.badlogic.gdx.utils.viewport.FitViewport;
 
 /**
  * Created by juan_ on 09-Jul-17.
@@ -24,13 +24,12 @@ public class LevelCompleted implements Screen {
     private Game game;
     private Label.LabelStyle labelStyle;
     private Label[] message = new Label[14];
-    float elapsed;
     private Mapa map;
     private Table firstLine, secondLine;
 
     public LevelCompleted(Game game, Mapa mapa){
         this.map = mapa;
-        stage = new Stage(new ScreenViewport());
+        stage = new Stage(new FitViewport(Gdx.graphics.getWidth(),Gdx.graphics.getHeight()));
         this.game = game;
 
         labelStyle = new Label.LabelStyle();
@@ -42,15 +41,12 @@ public class LevelCompleted implements Screen {
         table.addListener(new ClickListener() {
             @Override
             public boolean touchDown(InputEvent event, float x, float y, int pointer, int button) {
-                //LevelCompleted.this.game.setScreen(new GameScreen(LevelCompleted.this.game,LevelCompleted.this.map, true));
-                LevelCompleted.this.game.setScreen(new DimesionSelect(LevelCompleted.this.game));
-
+                LevelCompleted.this.game.setScreen(new GameModeScreen(LevelCompleted.this.game));
                 return true;
             }
         });
 
         table.setBounds(0,0,Gdx.graphics.getWidth(),Gdx.graphics.getHeight());
-        //table.setDebug(true);
         createTitle();
 
         table.add(this.firstLine);
@@ -116,20 +112,15 @@ public class LevelCompleted implements Screen {
 
     @Override
     public void render(float delta) {
-        /*
-        int i = FlowFree.rnd.nextInt(20);
-        if (i == 0) {
-            Animation<TextureRegion> anim = FlowFree.animaciones.get(FlowFree.rnd.nextInt(FlowFree.animaciones.size()));
-            Firework f = new Firework(FlowFree.rnd.nextFloat()*Gdx.graphics.getWidth(),FlowFree.rnd.nextFloat()*Gdx.graphics.getHeight(),anim);
-            stage.addActor(f);
-        }*/
+        FlowFree.clearScreen();
+
         stage.act();
         stage.draw();
     }
 
     @Override
     public void resize(int width, int height) {
-
+        stage.getViewport().update(width,height,true);
     }
 
     @Override

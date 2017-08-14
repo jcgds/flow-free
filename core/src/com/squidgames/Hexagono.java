@@ -22,13 +22,14 @@ import java.util.HashMap;
  */
 
 public class Hexagono extends Casilla{
-
+    ShapeRenderer renderer;
     private Polygon graphic;
     private float dCentroEsquina;
     private Hexagono lastTouchClave;
 
-    public Hexagono(Vector2 origenActor, float dCentroEsquina,int i, int j, boolean isExtremo, Color c, Hexagono pareja) {
+    public Hexagono(Vector2 origenActor, float dCentroEsquina,int i, int j, boolean isExtremo, Color c, Hexagono pareja, ShapeRenderer renderer) {
         super(origenActor,c,i,j,isExtremo,pareja);
+        this.renderer = renderer;
         this.dCentroEsquina = dCentroEsquina;
         this.setHeight(calculateHeight(dCentroEsquina));
         this.setWidth(calculateWidth(dCentroEsquina));
@@ -183,17 +184,17 @@ public class Hexagono extends Casilla{
     public void draw(Batch batch, float parentAlpha) {
         //Es muy parecido al de Clave, pero cambian las dimensiones de los circulos
         //Dibujar circulo interno
-        FlowFree.renderer.setColor(this.getColor());
-        FlowFree.renderer.begin(ShapeRenderer.ShapeType.Filled);
-        FlowFree.renderer.circle(this.getCircle().x, this.getCircle().y, this.getCircle().radius, 100);
-        FlowFree.renderer.end();
+        renderer.setColor(this.getColor());
+        renderer.begin(ShapeRenderer.ShapeType.Filled);
+        renderer.circle(this.getCircle().x, this.getCircle().y, this.getCircle().radius, 100);
+        renderer.end();
 
         if (this.getSucesor() != null) {
-            FlowFree.renderer.begin(ShapeRenderer.ShapeType.Filled);
-            FlowFree.renderer.setColor(this.getColor());
-            FlowFree.renderer.rectLine(this.getCircle().x ,this.getCircle().y,
+            renderer.begin(ShapeRenderer.ShapeType.Filled);
+            renderer.setColor(this.getColor());
+            renderer.rectLine(this.getCircle().x ,this.getCircle().y,
                     this.getSucesor().getCircle().x,this.getSucesor().getCircle().y, this.getWidth()/3.5f);
-            FlowFree.renderer.end();
+            renderer.end();
         }
     }
 

@@ -43,7 +43,6 @@ public class GameModeScreen extends ScreenAdapter {
 
         Table content = new Table();
         content.setBounds(0,0,SCREEN_WIDTH,SCREEN_HEIGHT);
-        content.setDebug(true);
         content.center();
 
         for (final FileHandle f: GAME_MODES) {

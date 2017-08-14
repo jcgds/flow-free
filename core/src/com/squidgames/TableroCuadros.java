@@ -42,16 +42,6 @@ public class TableroCuadros extends Mapa {
             renderer.end();
             Gdx.gl.glLineWidth(1);
         }
-
-        /*
-        for (Casilla c: this.getCasillas()) {
-            FlowFree.renderer.begin(ShapeRenderer.ShapeType.Line);
-            FlowFree.renderer.setColor(Color.WHITE);
-            Gdx.gl.glLineWidth(LINE_WIDTH);
-            FlowFree.renderer.box(c.getOriginX(),c.getOriginY(),0,c.getWidth(),c.getHeight(),0);
-            FlowFree.renderer.end();
-            Gdx.gl.glLineWidth(1);
-        }*/
     }
 
     @Override

@@ -55,8 +55,7 @@ public class MainMenu implements Screen {
             @Override
             public boolean touchDown(InputEvent event, float x, float y, int pointer, int button) {
                 Gdx.app.log(TAG,"Play button clicked");
-                game.setScreen(new DimesionSelect(game));
-                // MainMenu.this.game.setScreen(new DimesionSelect(MainMenu.this.game));
+                game.setScreen(new GameModeScreen(game));
                 return true;
             }
 

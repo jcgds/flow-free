@@ -21,25 +21,37 @@ import java.util.HashMap;
  */
 
 public class TableroHexagonos extends Mapa {
-
+    private final String TAG = this.getClass().getSimpleName();
+    private ShapeRenderer renderer;
     private float dCentroEsquina;
     private float LINE_WIDTH = 3;
+    private float SCREEN_WIDTH = 10;
+    private float SCREEN_HEIGHT = 18;
+    private float PADDING = 0.25f;
+    private float Y_CENTER,X_CENTER;
 
     @Override
     public void draw(Batch batch, float parentAlpha) {
         for (Casilla c: this.getCasillas()) {
-            FlowFree.renderer.begin(ShapeRenderer.ShapeType.Line);
-            FlowFree.renderer.setColor(Color.WHITE);
+            renderer.begin(ShapeRenderer.ShapeType.Line);
+            renderer.setColor(Color.WHITE);
             Gdx.gl.glLineWidth(LINE_WIDTH);
-            FlowFree.renderer.polygon(((Hexagono) c).getGraphic().getVertices());
-            FlowFree.renderer.end();
+            renderer.polygon(((Hexagono) c).getGraphic().getVertices());
+            renderer.end();
             Gdx.gl.glLineWidth(1);
         }
     }
 
 
-    public  TableroHexagonos(FileHandle fileHandle) {
+    public  TableroHexagonos(FileHandle fileHandle, ShapeRenderer renderer) {
         super();
+
+        //TODO: Pasar esta linea al constructor de la superclase
+        this.renderer = renderer;
+
+        Y_CENTER = (SCREEN_HEIGHT - SCREEN_WIDTH)/2 + PADDING;
+        X_CENTER = PADDING;
+        this.setOrigin(X_CENTER,Y_CENTER);
 
         JSONParser parser = new JSONParser();
         try {
@@ -57,14 +69,16 @@ public class TableroHexagonos extends Mapa {
             JSONArray tablero = (JSONArray) jsonObject.get("tablero");
             ArrayList<ArrayList<Casilla>> matriz = new ArrayList<ArrayList<Casilla>>();
 
-            this.setOriginY(this.getOrigin().y);
-            float width = (FlowFree.GAME_SCREEN_WIDTH-0.4f)/(this.getDimension() + 0.5f);
+            float width = (SCREEN_WIDTH-0.4f)/(this.getDimension() + 0.5f);
             this.dCentroEsquina = Hexagono.calculateDcentroEsquina(width);
 
             HashMap<String, Casilla> sinPareja = new HashMap<String, Casilla>();
 
-            float yMove = FlowFree.GAME_SCREEN_HEIGHT - this.getOrigin().y - dCentroEsquina;
+            float yMove = SCREEN_HEIGHT - this.getOriginY() - dCentroEsquina*2;
+            Gdx.app.log(TAG,String.format("Origin Y: %f   yMove: %f",this.getOriginY(),yMove));
+
             float xMove = this.getOrigin().x + 0.2f;
+
             ArrayList<Casilla> finalAtt = new ArrayList<Casilla>();
             boolean odd = false;
 
@@ -74,7 +88,6 @@ public class TableroHexagonos extends Mapa {
                 ArrayList<Casilla> newRow = new ArrayList<Casilla>();
                 matriz.add(newRow);
 
-
                 for (int j = 0; j < row.size(); j++) {
                     String content = row.get(j).toString();
                     Casilla newOne;
@@ -83,10 +96,8 @@ public class TableroHexagonos extends Mapa {
                         if (!content.equals("0"))
                             ext = true;
 
-
-
                         Vector2 actorOrigin = new Vector2(xMove,yMove);
-                        newOne = new Hexagono(actorOrigin,dCentroEsquina,i,j,ext,this.getColorMap().get(content),null);
+                        newOne = new Hexagono(actorOrigin,dCentroEsquina,i,j,ext,this.getColorMap().get(content),null, renderer);
                         newRow.add(newOne);
                         finalAtt.add(newOne);
                         xMove += Hexagono.calculateWidth(dCentroEsquina);
@@ -114,8 +125,6 @@ public class TableroHexagonos extends Mapa {
                 }
 
                 yMove = yMove - (Hexagono.calculateHeight(dCentroEsquina)*(0.75f));
-                //xMove = 0;
-                //yMove = yMove - Hexagono.calculateHeight(dCentroEsquina);
             }
 
 

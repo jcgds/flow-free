@@ -35,9 +35,6 @@ public class LoadingScreen extends ScreenAdapter {
         batch.draw(logo,0,0);//,Gdx.graphics.getWidth(),Gdx.graphics.getHeight());
         batch.end();
         if (assetHandler.manager.update()) {
-            FlowFree.MAPAS = MapLoader.load();
-            FlowFree.picarMapas();
-
             FlowFree.GAME_FONTS.put("cafeBig", assetHandler.manager.get("cafeBig.ttf",BitmapFont.class));
             FlowFree.GAME_FONTS.put("cafeMedium", assetHandler.manager.get("cafeMedium.ttf",BitmapFont.class));
             FlowFree.GAME_FONTS.put("cafeSmall", assetHandler.manager.get("cafeSmall.ttf",BitmapFont.class));
@@ -45,8 +42,7 @@ public class LoadingScreen extends ScreenAdapter {
             FlowFree.GAME_FONTS.put("orangeMedium", assetHandler.manager.get("orangeMedium.ttf",BitmapFont.class));
             FlowFree.GAME_FONTS.put("orangeSmall", assetHandler.manager.get("orangeSmall.ttf",BitmapFont.class));
 
-            //game.setScreen(new MainMenu(game));
-            game.setScreen(new GameModeScreen(game));
+            game.setScreen(new MainMenu(game));
         }
     }
 
