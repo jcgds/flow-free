@@ -1,9 +1,10 @@
-package com.squidgames;
+package com.squidgames.Screens;
 
 import com.badlogic.gdx.Game;
 import com.badlogic.gdx.Gdx;
 import com.badlogic.gdx.Input;
 import com.badlogic.gdx.ScreenAdapter;
+import com.squidgames.FlowFree;
 
 /**
  * Created by juan_ on 14-Aug-17.

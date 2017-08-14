@@ -31,7 +31,7 @@ public class FlowFree extends Game implements InputProcessor{
 		assetHandler = new AssetHandler();
 		assetHandler.load();
 
-		this.setScreen(new LoadingScreen(this,assetHandler));
+		this.setScreen(new com.squidgames.Screens.LoadingScreen(this,assetHandler));
 	}
 
 	public static void clearScreen() {
