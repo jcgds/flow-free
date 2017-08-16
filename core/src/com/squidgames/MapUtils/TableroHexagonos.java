@@ -1,4 +1,4 @@
-package com.squidgames;
+package com.squidgames.MapUtils;
 
 import com.badlogic.gdx.Gdx;
 import com.badlogic.gdx.files.FileHandle;
@@ -6,6 +6,8 @@ import com.badlogic.gdx.graphics.Color;
 import com.badlogic.gdx.graphics.g2d.Batch;
 import com.badlogic.gdx.graphics.glutils.ShapeRenderer;
 import com.badlogic.gdx.math.Vector2;
+import com.squidgames.Casilla;
+import com.squidgames.Hexagono;
 
 import org.json.simple.JSONArray;
 import org.json.simple.JSONObject;
@@ -32,6 +34,8 @@ public class TableroHexagonos extends Mapa {
 
     @Override
     public void draw(Batch batch, float parentAlpha) {
+        renderer.setProjectionMatrix(batch.getProjectionMatrix());
+
         for (Casilla c: this.getCasillas()) {
             renderer.begin(ShapeRenderer.ShapeType.Line);
             renderer.setColor(Color.WHITE);
@@ -43,11 +47,10 @@ public class TableroHexagonos extends Mapa {
     }
 
 
-    public  TableroHexagonos(FileHandle fileHandle, ShapeRenderer renderer) {
+    public  TableroHexagonos(FileHandle fileHandle) {
         super();
-
-        //TODO: Pasar esta linea al constructor de la superclase
-        this.renderer = renderer;
+        renderer = new ShapeRenderer();
+        renderer.setAutoShapeType(true);
 
         Y_CENTER = (SCREEN_HEIGHT - SCREEN_WIDTH)/2 + PADDING;
         X_CENTER = 0;

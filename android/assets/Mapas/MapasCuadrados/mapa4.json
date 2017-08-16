@@ -1,4 +1,5 @@
 {
+	"tipo":"cuadrado",
 	"dimension": "9",
 	"tablero": [
 		[0,0,0,0,0,0,0,0,10],
