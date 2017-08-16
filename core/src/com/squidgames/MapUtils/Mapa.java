@@ -1,9 +1,10 @@
-package com.squidgames;
+package com.squidgames.MapUtils;
 
 import com.badlogic.gdx.graphics.Color;
 import com.badlogic.gdx.math.Vector2;
 import com.badlogic.gdx.scenes.scene2d.Actor;
 import com.badlogic.gdx.scenes.scene2d.Stage;
+import com.squidgames.Casilla;
 
 import java.util.ArrayList;
 import java.util.HashMap;

@@ -21,7 +21,7 @@ import java.util.HashMap;
  * Referencia sobre geometria de los Hexagonos: http://www.redblobgames.com/grids/hexagons
  */
 
-public class Hexagono extends Casilla{
+public class Hexagono extends Casilla {
     ShapeRenderer renderer;
     private Polygon graphic;
     private float dCentroEsquina;
