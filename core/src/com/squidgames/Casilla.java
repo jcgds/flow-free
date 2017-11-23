@@ -111,9 +111,8 @@ public abstract class Casilla extends Actor{
     *  En cualquier casilla el touchDragged es el mismo, el cual dependera del getObjetivo y ejecutarMovimiento
     *  de la subclase que lo llame. El touchDown es distinto pues por ejemplo en el caso de las casillas hexagonales
     *  el actor es un rectangulo que contiene al hexagono, pero el toque solo se detecta dentro de la figura hexagonal
-    *  como tal.
-    *
     * */
+
     public Casilla() {
         this.setPredecesor(null);
         this.setSucesor(null);

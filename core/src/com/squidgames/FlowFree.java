@@ -8,6 +8,8 @@ import com.badlogic.gdx.graphics.g2d.BitmapFont;
 
 import java.util.HashMap;
 
+//TODO: Hacer subclase de Stage que maneje el mensaje flotante de nivel completado
+
 public class FlowFree extends Game implements InputProcessor{
 	public static HashMap<String,BitmapFont> GAME_FONTS;
 	AssetHandler assetHandler;
