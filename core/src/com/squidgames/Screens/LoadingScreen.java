@@ -23,20 +23,19 @@ import com.squidgames.AssetHandler;
 import com.squidgames.Constants;
 import com.squidgames.FlowFree;
 import com.squidgames.SwitchScreenAction;
+import com.squidgames.Transitions;
 
 /**
  * Created by juan_ on 11-Aug-17.
  */
 
-public class LoadingScreen extends ScreenAdapter {
+public class LoadingScreen extends ScreenAdapter implements Transitions {
     private Game game;
     private AssetHandler assetHandler;
     private Stage stage;
     private Image logoActor;
-    boolean change;
 
     public LoadingScreen(Game game, AssetHandler handler) {
-        change = false;
         this.game = game;
         this.assetHandler = handler;
         Viewport viewport = new FitViewport(Constants.SCREEN_WIDTH,Constants.SCREEN_HEIGHT);
@@ -67,10 +66,7 @@ public class LoadingScreen extends ScreenAdapter {
             FlowFree.GAME_FONTS.put("orangeMedium", assetHandler.manager.get("orangeMedium.ttf",BitmapFont.class));
             FlowFree.GAME_FONTS.put("orangeSmall", assetHandler.manager.get("orangeSmall.ttf",BitmapFont.class));
 
-            Screen mainMenu = new MainMenu(game);
-            SequenceAction transition = new SequenceAction(Actions.fadeOut(Constants.TRNASITION_OUT_TIME),
-                    new SwitchScreenAction(game,mainMenu));
-            logoActor.addAction(transition);
+            fadeOut();
         }
 
     }
@@ -85,4 +81,19 @@ public class LoadingScreen extends ScreenAdapter {
         super.dispose();
         stage.dispose();
     }
+
+    @Override
+    public void fadeIn() {
+        //Por ahora nada, pues nunca haremos fadeIn de este loading screen
+    }
+
+    @Override
+    public void fadeOut() {
+        MainMenu mainMenu = new MainMenu(game);
+
+        SequenceAction transition = new SequenceAction(Actions.fadeOut(Constants.TRANSITION_TIME),
+                new SwitchScreenAction(game,mainMenu));
+        logoActor.addAction(transition);
+    }
+
 }

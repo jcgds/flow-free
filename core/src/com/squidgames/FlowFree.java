@@ -20,10 +20,4 @@ public class FlowFree extends Game{
 		assetHandler.load();
 		this.setScreen(new com.squidgames.Screens.LoadingScreen(this,assetHandler));
 	}
-
-	/*
-	public static void clearScreen() {
-		Gdx.gl.glClearColor(0,0,0,1);
-		Gdx.gl.glClear(GL20.GL_COLOR_BUFFER_BIT);
-	}*/
 }
