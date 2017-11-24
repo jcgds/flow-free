@@ -89,7 +89,7 @@ public class LoadingScreen extends ScreenAdapter implements Transitions {
 
     @Override
     public void fadeOut() {
-        MainMenu mainMenu = new MainMenu(game);
+        Screen mainMenu = new MainMenu(game);
 
         SequenceAction transition = new SequenceAction(Actions.fadeOut(Constants.TRANSITION_TIME),
                 new SwitchScreenAction(game,mainMenu));

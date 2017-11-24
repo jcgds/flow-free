@@ -2,22 +2,29 @@ package com.squidgames.Screens;
 
 import com.badlogic.gdx.Game;
 import com.badlogic.gdx.Gdx;
+import com.badlogic.gdx.Screen;
 import com.badlogic.gdx.files.FileHandle;
 import com.badlogic.gdx.graphics.Color;
+import com.badlogic.gdx.scenes.scene2d.Actor;
 import com.badlogic.gdx.scenes.scene2d.InputEvent;
 import com.badlogic.gdx.scenes.scene2d.Stage;
+import com.badlogic.gdx.scenes.scene2d.actions.Actions;
+import com.badlogic.gdx.scenes.scene2d.actions.SequenceAction;
 import com.badlogic.gdx.scenes.scene2d.ui.Label;
 import com.badlogic.gdx.scenes.scene2d.ui.Table;
 import com.badlogic.gdx.scenes.scene2d.utils.ClickListener;
 import com.badlogic.gdx.utils.viewport.FitViewport;
 import com.badlogic.gdx.utils.viewport.Viewport;
+import com.squidgames.Constants;
 import com.squidgames.FlowFree;
+import com.squidgames.SwitchScreenAction;
+import com.squidgames.Transitions;
 
 /**
  * Created by juan_ on 12-Aug-17.
  */
 
-public class GameModeScreen extends BaseScene {
+public class GameModeScreen extends BaseScene implements Transitions {
     private final String TAG = getClass().getSimpleName();
     private final String TITLE = "Select Game mode";
     private float SCREEN_WIDTH = 1080;
@@ -26,6 +33,10 @@ public class GameModeScreen extends BaseScene {
     private FileHandle[] GAME_MODES;
     private Stage stage;
 
+    /*TODO:
+        Necesitaremos tener una estructura que almacene todos los Labels que son los botones de los
+        modos de juego para poder asignar a cada uno su SwicthScreen Apropiado en el fadeOut();
+     */
     public GameModeScreen(Game game) {
         super(game);
         Viewport viewport = new FitViewport(SCREEN_WIDTH,SCREEN_HEIGHT);
@@ -46,7 +57,6 @@ public class GameModeScreen extends BaseScene {
 
         for (final FileHandle f: GAME_MODES) {
             Gdx.app.log(TAG,f.name());
-            //MODE_SELECTION = f;
             Label label = new Label(f.name(),new Label.LabelStyle(FlowFree.GAME_FONTS.get("cafeMedium"), Color.WHITE));
 
             label.addListener(new ClickListener() {
@@ -80,10 +90,25 @@ public class GameModeScreen extends BaseScene {
     @Override
     public void show() {
         Gdx.input.setInputProcessor(stage);
+        fadeIn();
     }
 
     @Override
     protected void handleKeyBack() {
+        //TODO: Hacer fadeOut de este screen y fadeIn del anterior (MainMenu)
         game.setScreen( new MainMenu(game));
+    }
+
+    @Override
+    public void fadeIn() {
+        for (Actor actor: stage.getActors()) {
+            actor.addAction(Actions.fadeOut(0));
+            actor.addAction(Actions.fadeIn(Constants.TRANSITION_TIME));
+        }
+    }
+
+    @Override
+    public void fadeOut() {
+
     }
 }

@@ -2,6 +2,7 @@ package com.squidgames.Screens;
 
 import com.badlogic.gdx.Game;
 import com.badlogic.gdx.Gdx;
+import com.badlogic.gdx.Screen;
 import com.badlogic.gdx.graphics.Color;
 import com.badlogic.gdx.graphics.GL20;
 import com.badlogic.gdx.graphics.OrthographicCamera;
@@ -107,7 +108,7 @@ public class MainMenu extends BaseScene implements Transitions {
 
     @Override
     public void fadeOut() {
-        GameModeScreen screen = new GameModeScreen(game);
+        Screen screen = new GameModeScreen(game);
 
         for (Actor actor: stage.getActors()) {
             SequenceAction transition = new SequenceAction(Actions.fadeOut(Constants.TRANSITION_TIME),

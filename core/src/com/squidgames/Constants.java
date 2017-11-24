@@ -17,5 +17,5 @@ public class Constants {
 
     public static String LOGO_PATH = "logo.png";
 
-    public static float TRANSITION_TIME = 1f;
+    public static float TRANSITION_TIME = 0.4f;
 }
