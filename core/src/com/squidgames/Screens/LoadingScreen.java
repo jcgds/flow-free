@@ -2,40 +2,63 @@ package com.squidgames.Screens;
 
 import com.badlogic.gdx.Game;
 import com.badlogic.gdx.Gdx;
+import com.badlogic.gdx.Screen;
 import com.badlogic.gdx.ScreenAdapter;
 import com.badlogic.gdx.graphics.Color;
+import com.badlogic.gdx.graphics.GL20;
+import com.badlogic.gdx.graphics.OrthographicCamera;
 import com.badlogic.gdx.graphics.Texture;
 import com.badlogic.gdx.graphics.g2d.BitmapFont;
 import com.badlogic.gdx.graphics.g2d.SpriteBatch;
+import com.badlogic.gdx.scenes.scene2d.Action;
+import com.badlogic.gdx.scenes.scene2d.Stage;
+import com.badlogic.gdx.scenes.scene2d.actions.Actions;
+import com.badlogic.gdx.scenes.scene2d.actions.RepeatAction;
+import com.badlogic.gdx.scenes.scene2d.actions.SequenceAction;
+import com.badlogic.gdx.scenes.scene2d.ui.Image;
+import com.badlogic.gdx.scenes.scene2d.ui.Table;
+import com.badlogic.gdx.utils.viewport.FitViewport;
+import com.badlogic.gdx.utils.viewport.Viewport;
 import com.squidgames.AssetHandler;
+import com.squidgames.Constants;
 import com.squidgames.FlowFree;
+import com.squidgames.SwitchScreenAction;
 
 /**
  * Created by juan_ on 11-Aug-17.
  */
-//TODO: Implementar Viewport y dibujar correctamente el logo centrado y que entre en la pantalla
 
 public class LoadingScreen extends ScreenAdapter {
-    Game game;
-    AssetHandler assetHandler;
-    Texture logo;
-    SpriteBatch batch;
+    private Game game;
+    private AssetHandler assetHandler;
+    private Stage stage;
+    private Image logoActor;
+    boolean change;
 
     public LoadingScreen(Game game, AssetHandler handler) {
+        change = false;
         this.game = game;
         this.assetHandler = handler;
-        logo = new Texture(Gdx.files.internal("logo.png"));
-        batch = new SpriteBatch();
+        Viewport viewport = new FitViewport(Constants.SCREEN_WIDTH,Constants.SCREEN_HEIGHT);
+        stage = new Stage(viewport);
+
+        Table table = new Table();
+        table.setSize(Constants.SCREEN_WIDTH, Constants.SCREEN_HEIGHT);
+        Texture logo = new Texture(Gdx.files.internal(Constants.LOGO_PATH));
+        logoActor = new Image(logo);
+        table.add(logoActor);
+
+        stage.addActor(table);
     }
 
     @Override
     public void render(float delta) {
-        FlowFree.clearScreen();
-        batch.begin();
-        //Gdx.graphics.getWidth()/2,Gdx.graphics.getHeight()/2
-        batch.setColor(Color.WHITE);
-        batch.draw(logo,0,0);
-        batch.end();
+        Gdx.gl.glClearColor(0,0,0,1);
+        Gdx.gl.glClear(GL20.GL_COLOR_BUFFER_BIT);
+
+        stage.act();
+        stage.draw();
+
         if (assetHandler.manager.update()) {
             FlowFree.GAME_FONTS.put("cafeBig", assetHandler.manager.get("cafeBig.ttf",BitmapFont.class));
             FlowFree.GAME_FONTS.put("cafeMedium", assetHandler.manager.get("cafeMedium.ttf",BitmapFont.class));
@@ -44,14 +67,22 @@ public class LoadingScreen extends ScreenAdapter {
             FlowFree.GAME_FONTS.put("orangeMedium", assetHandler.manager.get("orangeMedium.ttf",BitmapFont.class));
             FlowFree.GAME_FONTS.put("orangeSmall", assetHandler.manager.get("orangeSmall.ttf",BitmapFont.class));
 
-            game.setScreen(new MainMenu(game));
+            Screen mainMenu = new MainMenu(game);
+            SequenceAction transition = new SequenceAction(Actions.fadeOut(Constants.TRNASITION_OUT_TIME),
+                    new SwitchScreenAction(game,mainMenu));
+            logoActor.addAction(transition);
         }
+
+    }
+
+    @Override
+    public void resize(int width, int height) {
+        stage.getViewport().update(width,height);
     }
 
     @Override
     public void dispose() {
         super.dispose();
-        batch.dispose();
-        logo.dispose();
+        stage.dispose();
     }
 }
