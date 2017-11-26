@@ -25,6 +25,6 @@ public class SwitchScreenAction extends Action {
     @Override
     public boolean act(float delta) {
         game.setScreen(screen);
-        return false;
+        return true;
     }
 }

@@ -24,7 +24,7 @@ import com.squidgames.Transitions;
  * Created by juan_ on 12-Aug-17.
  */
 
-public class GameModeScreen extends BaseScene implements Transitions {
+public class GameModeScreen extends BaseScene {
     private final String TAG = getClass().getSimpleName();
     private final String TITLE = "Select Game mode";
     private float SCREEN_WIDTH = 1080;
@@ -32,12 +32,13 @@ public class GameModeScreen extends BaseScene implements Transitions {
     private FileHandle MAP_FOLDER;
     private FileHandle[] GAME_MODES;
     private Stage stage;
+    private Screen nextScreen;
 
     /*TODO:
         Necesitaremos tener una estructura que almacene todos los Labels que son los botones de los
         modos de juego para poder asignar a cada uno su SwicthScreen Apropiado en el fadeOut();
      */
-    public GameModeScreen(Game game) {
+    public GameModeScreen(final Game game) {
         super(game);
         Viewport viewport = new FitViewport(SCREEN_WIDTH,SCREEN_HEIGHT);
         stage = new Stage(viewport);
@@ -63,7 +64,9 @@ public class GameModeScreen extends BaseScene implements Transitions {
                 @Override
                 public boolean touchDown(InputEvent event, float x, float y, int pointer, int button) {
                     Gdx.app.log(TAG,"Selected mode: " + f.name());
-                    GameModeScreen.this.game.setScreen(new MapSelect(GameModeScreen.this.game,f));
+
+                    nextScreen = new MapSelect(game,f);
+                    hide();
                     return true;
                 }
             });
@@ -89,26 +92,24 @@ public class GameModeScreen extends BaseScene implements Transitions {
 
     @Override
     public void show() {
+        for (Actor actor: stage.getActors()) {
+            actor.addAction(Actions.fadeOut(0));
+            actor.addAction(Actions.fadeIn(Constants.TRANSITION_TIME));
+        }
         Gdx.input.setInputProcessor(stage);
-        fadeIn();
+    }
+
+    @Override
+    public void hide() {
+        SequenceAction sequenceAction = new SequenceAction();
+        sequenceAction.addAction(Actions.fadeOut(Constants.TRANSITION_TIME));
+        sequenceAction.addAction(new SwitchScreenAction(game, nextScreen));
+        stage.addAction(sequenceAction);
     }
 
     @Override
     protected void handleKeyBack() {
         //TODO: Hacer fadeOut de este screen y fadeIn del anterior (MainMenu)
         game.setScreen( new MainMenu(game));
-    }
-
-    @Override
-    public void fadeIn() {
-        for (Actor actor: stage.getActors()) {
-            actor.addAction(Actions.fadeOut(0));
-            actor.addAction(Actions.fadeIn(Constants.TRANSITION_TIME));
-        }
-    }
-
-    @Override
-    public void fadeOut() {
-
     }
 }

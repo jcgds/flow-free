@@ -25,12 +25,13 @@ import com.squidgames.Transitions;
  * Created by juan_ on 11-Aug-17.
  */
 
-public class MainMenu extends BaseScene implements Transitions {
+public class MainMenu extends BaseScene {
     private final String TAG = getClass().getSimpleName();
     private final float MENU_WIDTH = 1080.00f;
     private final float MENU_HEIGHT = 1920.00f;
-    Stage stage;
-    Label l1;
+    private Stage stage;
+    private Label l1;
+    private Screen nextScreen;
 
     public MainMenu(final Game game) {
         super(game);
@@ -56,7 +57,8 @@ public class MainMenu extends BaseScene implements Transitions {
             @Override
             public boolean touchDown(InputEvent event, float x, float y, int pointer, int button) {
                 Gdx.app.log(TAG,"Play button clicked");
-                fadeOut();
+                nextScreen = new GameModeScreen(game);
+                hide();
                 return true;
             }
 
@@ -68,8 +70,19 @@ public class MainMenu extends BaseScene implements Transitions {
 
     @Override
     public void show() {
+        for (Actor actor: stage.getActors()) {
+            actor.addAction(Actions.fadeOut(0));
+            actor.addAction(Actions.fadeIn(Constants.TRANSITION_TIME));
+        }
         Gdx.input.setInputProcessor(stage);
-        fadeIn();
+    }
+
+    @Override
+    public void hide() {
+        SequenceAction sequenceAction = new SequenceAction();
+        sequenceAction.addAction(Actions.fadeOut(Constants.TRANSITION_TIME));
+        sequenceAction.addAction(new SwitchScreenAction(game, nextScreen));
+        stage.addAction(sequenceAction);
     }
 
     @Override
@@ -96,25 +109,6 @@ public class MainMenu extends BaseScene implements Transitions {
     @Override
     public void dispose() {
         stage.dispose();
-    }
-
-    @Override
-    public void fadeIn() {
-        for (Actor actor: stage.getActors()) {
-            actor.addAction(Actions.fadeOut(0));
-            actor.addAction(Actions.fadeIn(Constants.TRANSITION_TIME));
-        }
-    }
-
-    @Override
-    public void fadeOut() {
-        Screen screen = new GameModeScreen(game);
-
-        for (Actor actor: stage.getActors()) {
-            SequenceAction transition = new SequenceAction(Actions.fadeOut(Constants.TRANSITION_TIME),
-                    new SwitchScreenAction(game,screen));
-            actor.addAction(transition);
-        }
     }
 }
 

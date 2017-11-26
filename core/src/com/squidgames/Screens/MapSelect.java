@@ -2,19 +2,26 @@ package com.squidgames.Screens;
 
 import com.badlogic.gdx.Game;
 import com.badlogic.gdx.Gdx;
+import com.badlogic.gdx.Screen;
 import com.badlogic.gdx.files.FileHandle;
 import com.badlogic.gdx.graphics.Color;
 import com.badlogic.gdx.graphics.GL20;
 import com.badlogic.gdx.graphics.OrthographicCamera;
+import com.badlogic.gdx.scenes.scene2d.Actor;
 import com.badlogic.gdx.scenes.scene2d.InputEvent;
 import com.badlogic.gdx.scenes.scene2d.Stage;
+import com.badlogic.gdx.scenes.scene2d.actions.Actions;
+import com.badlogic.gdx.scenes.scene2d.actions.SequenceAction;
 import com.badlogic.gdx.scenes.scene2d.ui.Label;
 import com.badlogic.gdx.scenes.scene2d.ui.Table;
 import com.badlogic.gdx.scenes.scene2d.utils.ClickListener;
 import com.badlogic.gdx.utils.viewport.FitViewport;
 import com.badlogic.gdx.utils.viewport.Viewport;
+import com.squidgames.Constants;
 import com.squidgames.FlowFree;
 import com.squidgames.MapUtils.Mapa;
+import com.squidgames.SwitchScreenAction;
+import com.squidgames.Transitions;
 
 import java.util.ArrayList;
 import java.util.HashMap;
@@ -30,8 +37,9 @@ public class MapSelect extends BaseScene {
     private final float MENU_WIDTH = 1080.00f;
     private final float MENU_HEIGHT = 1920.00f;
     private FileHandle MAP_FOLDER;
+    private Screen nextScreen;
 
-    public MapSelect(Game game, FileHandle MapFolder) {
+    public MapSelect(final Game game, FileHandle MapFolder) {
         super(game);
         //region ColorMap
         colorMap = new HashMap<Integer, Color>();
@@ -47,13 +55,9 @@ public class MapSelect extends BaseScene {
         //endregion
 
         this.MAP_FOLDER = MapFolder;
-    }
 
-    @Override
-    public void show() {
         Viewport viewport = new FitViewport(MENU_WIDTH,MENU_HEIGHT, new OrthographicCamera());
         stage = new Stage(viewport);
-        Gdx.input.setInputProcessor(stage);
 
         Table table = new Table();
         table.setSize(MENU_WIDTH,MENU_HEIGHT);
@@ -73,7 +77,8 @@ public class MapSelect extends BaseScene {
                 @Override
                 public boolean touchDown(InputEvent event, float x, float y, int pointer, int button) {
                     Gdx.app.log(TAG,"Selected map: " + fileHandle.name());
-                    game.setScreen(new GameScreen(game,fileHandle, MAP_FOLDER));
+                    nextScreen = new GameScreen(game,fileHandle, MAP_FOLDER);
+                    hide();
                     return true;
                 }
             });
@@ -83,6 +88,33 @@ public class MapSelect extends BaseScene {
 
         stage.addActor(table);
         stage.addActor(options);
+
+    }
+
+    @Override
+    public void show() {
+        for (Actor actor: stage.getActors()) {
+            actor.addAction(Actions.fadeOut(0));
+            actor.addAction(Actions.fadeIn(Constants.TRANSITION_TIME));
+        }
+        Gdx.input.setInputProcessor(stage);
+    }
+
+    //TODO: Ver porque no se esta haciendo el cambio de pantalla
+    @Override
+    public void hide() {
+        Gdx.app.log(TAG,"Hiding screen");
+        SequenceAction sequenceAction = new SequenceAction();
+        sequenceAction.addAction(Actions.fadeOut(Constants.TRANSITION_TIME));
+        sequenceAction.addAction(new SwitchScreenAction(game, nextScreen));
+        stage.addAction(sequenceAction);
+        /*
+        for (Actor actor: stage.getActors()) {
+            SequenceAction sequenceAction = new SequenceAction();
+            sequenceAction.addAction(Actions.fadeOut(Constants.TRANSITION_TIME));
+            sequenceAction.addAction(new SwitchScreenAction(game, nextScreen));
+            actor.addAction(sequenceAction);
+        }*/
     }
 
     private Table generateTitle() {
@@ -120,4 +152,5 @@ public class MapSelect extends BaseScene {
     public void dispose() {
         stage.dispose();
     }
+
 }

@@ -11,6 +11,7 @@ import com.badlogic.gdx.graphics.Texture;
 import com.badlogic.gdx.graphics.g2d.BitmapFont;
 import com.badlogic.gdx.graphics.g2d.SpriteBatch;
 import com.badlogic.gdx.scenes.scene2d.Action;
+import com.badlogic.gdx.scenes.scene2d.Actor;
 import com.badlogic.gdx.scenes.scene2d.Stage;
 import com.badlogic.gdx.scenes.scene2d.actions.Actions;
 import com.badlogic.gdx.scenes.scene2d.actions.RepeatAction;
@@ -29,11 +30,12 @@ import com.squidgames.Transitions;
  * Created by juan_ on 11-Aug-17.
  */
 
-public class LoadingScreen extends ScreenAdapter implements Transitions {
+public class LoadingScreen extends ScreenAdapter {
     private Game game;
     private AssetHandler assetHandler;
     private Stage stage;
     private Image logoActor;
+    private Screen nextScreen;
 
     public LoadingScreen(Game game, AssetHandler handler) {
         this.game = game;
@@ -66,9 +68,27 @@ public class LoadingScreen extends ScreenAdapter implements Transitions {
             FlowFree.GAME_FONTS.put("orangeMedium", assetHandler.manager.get("orangeMedium.ttf",BitmapFont.class));
             FlowFree.GAME_FONTS.put("orangeSmall", assetHandler.manager.get("orangeSmall.ttf",BitmapFont.class));
 
-            fadeOut();
+            nextScreen = new MainMenu(game);
+            hide();
         }
 
+    }
+
+    @Override
+    public void show() {
+        for (Actor actor: stage.getActors()) {
+            actor.addAction(Actions.fadeOut(0));
+            actor.addAction(Actions.fadeIn(Constants.TRANSITION_TIME));
+        }
+        Gdx.input.setInputProcessor(stage);
+    }
+
+    @Override
+    public void hide() {
+        SequenceAction sequenceAction = new SequenceAction();
+        sequenceAction.addAction(Actions.fadeOut(Constants.TRANSITION_TIME));
+        sequenceAction.addAction(new SwitchScreenAction(game, nextScreen));
+        stage.addAction(sequenceAction);
     }
 
     @Override
@@ -81,19 +101,4 @@ public class LoadingScreen extends ScreenAdapter implements Transitions {
         super.dispose();
         stage.dispose();
     }
-
-    @Override
-    public void fadeIn() {
-        //Por ahora nada, pues nunca haremos fadeIn de este loading screen
-    }
-
-    @Override
-    public void fadeOut() {
-        Screen mainMenu = new MainMenu(game);
-
-        SequenceAction transition = new SequenceAction(Actions.fadeOut(Constants.TRANSITION_TIME),
-                new SwitchScreenAction(game,mainMenu));
-        logoActor.addAction(transition);
-    }
-
 }
