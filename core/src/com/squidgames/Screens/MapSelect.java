@@ -100,7 +100,6 @@ public class MapSelect extends BaseScene {
         Gdx.input.setInputProcessor(stage);
     }
 
-    //TODO: Ver porque no se esta haciendo el cambio de pantalla
     @Override
     public void hide() {
         Gdx.app.log(TAG,"Hiding screen");
@@ -108,13 +107,6 @@ public class MapSelect extends BaseScene {
         sequenceAction.addAction(Actions.fadeOut(Constants.TRANSITION_TIME));
         sequenceAction.addAction(new SwitchScreenAction(game, nextScreen));
         stage.addAction(sequenceAction);
-        /*
-        for (Actor actor: stage.getActors()) {
-            SequenceAction sequenceAction = new SequenceAction();
-            sequenceAction.addAction(Actions.fadeOut(Constants.TRANSITION_TIME));
-            sequenceAction.addAction(new SwitchScreenAction(game, nextScreen));
-            actor.addAction(sequenceAction);
-        }*/
     }
 
     private Table generateTitle() {

@@ -7,11 +7,14 @@ import com.badlogic.gdx.graphics.Color;
 import com.badlogic.gdx.graphics.GL20;
 import com.badlogic.gdx.graphics.Texture;
 import com.badlogic.gdx.graphics.g2d.BitmapFont;
+import com.badlogic.gdx.scenes.scene2d.Actor;
 import com.badlogic.gdx.scenes.scene2d.Stage;
+import com.badlogic.gdx.scenes.scene2d.actions.Actions;
 import com.badlogic.gdx.scenes.scene2d.ui.Label;
 import com.badlogic.gdx.scenes.scene2d.ui.Table;
 import com.badlogic.gdx.utils.viewport.FitViewport;
 import com.badlogic.gdx.utils.viewport.Viewport;
+import com.squidgames.Constants;
 import com.squidgames.FlowFree;
 import com.squidgames.MapUtils.MapFactory;
 import com.squidgames.MapUtils.Mapa;
@@ -57,11 +60,17 @@ public class GameScreen extends BaseScene {
         if (gameMap != null)
             gameMap.addToStage(mapStage);
 
-        textStage.addActor(textorg);
+        //textStage.addActor(textorg);
     }
 
+    /*TODO: Hacer el show de GameScreen
+        Este show es mas complicado, como todo lo dibujamos con ShapeRenderer y no con texturas
+        entonces el fadeOut sera mas complicado.
+        TODO: Cambiar todo el uso de ShapeRenderer a Batch
+     */
     @Override
     public void show() {
+        Gdx.app.log(TAG, "Show");
         Gdx.input.setInputProcessor(mapStage);
     }
 

@@ -14,41 +14,12 @@ import com.badlogic.gdx.scenes.scene2d.utils.ClickListener;
  * Created by juan_ on 15-Jun-17.
  */
 
+//TODO: Cambiar todo el trabajo con ShapeRenderer a Batch, usando texturas, por ahora necesitariamos una textura Circulo
+
 public class Clave extends Casilla {
     private String TAG = getClass().getSimpleName();
     private float espacioCasilla;
-    ShapeRenderer renderer;
-
-    public Clave(int tableroI, int tableroJ, Color color, float espacioCasilla, boolean extremo) {
-        super();
-        this.setDebug(true);
-        this.setI(tableroI);
-        this.setJ(tableroJ);
-        this.espacioCasilla = espacioCasilla;
-        this.setOrigin(0,0);
-        this.setCircle(new Circle(0,0,0));
-        if (color != null)
-            this.setColor(color);
-        else
-            this.setColor(new Color());
-
-        this.setExtremo(extremo);
-        this.addListener(new ClickListener(){
-            @Override
-            public boolean touchDown(InputEvent event, float x, float y, int pointer, int button) {
-                Vector2 basePosition = new Vector2(Gdx.input.getX(), Gdx.input.getY());
-                Gdx.app.log("IsConnected?", Clave.this.toString() + " - " + Clave.this.isConnected());
-                Clave.this.setLastTouchCasilla(Clave.this);
-                Clave.this.getLastTouchCasilla().liberar();
-                if (Clave.this.getLastTouchCasilla().getPareja() != null){
-                    Clave.this.getLastTouchCasilla().getPareja().liberar();
-                    Gdx.app.log("LIBERAR", Clave.this.getLastTouchCasilla().getPareja().toString());
-                }
-
-                return true;
-            }
-        });
-    }
+    private ShapeRenderer renderer;
 
     public Clave(int tableroI, int tableroJ, Color color, float espacioCasilla, boolean extremo, ShapeRenderer renderer) {
         super();
@@ -116,19 +87,6 @@ public class Clave extends Casilla {
                     getSucesor().getOriginX() + this.getWidth()/2,getSucesor().getOriginY() + this.getWidth()/2,this.getWidth()/3f);
             renderer.end();
         }
-        /*
-        FlowFree.renderer.setColor(this.getColor());
-        FlowFree.renderer.begin(ShapeRenderer.ShapeType.Filled);
-        FlowFree.renderer.circle(this.getCircle().x, this.getCircle().y, this.getCircle().radius, 100);
-        FlowFree.renderer.end();
-
-        if (this.getSucesor() != null) {
-            FlowFree.renderer.begin(ShapeRenderer.ShapeType.Filled);
-            FlowFree.renderer.setColor(this.getColor());
-            FlowFree.renderer.rectLine(this.getOriginX()+ this.getWidth()/2,this.getOriginY()+ this.getWidth()/2,
-                    getSucesor().getOriginX() + this.getWidth()/2,getSucesor().getOriginY() + this.getWidth()/2,this.getWidth()/3f);
-            FlowFree.renderer.end();
-        }*/
     }
 
     @Override
@@ -153,10 +111,6 @@ public class Clave extends Casilla {
                 //lastTouchClave.caminoCompleted();
                 connect = true;
             }
-
-            //Si estamos tratando de intersectar (POR AHORA)
-            //if (objetivo.getPredecesor() != null && objetivo.getSucesor() != null)
-            //    return;
 
             Gdx.app.log("MOVIMIENTO",String.format("Inicio: %s  Final: %s",this.toString(),objetivo.toString()));
 
@@ -214,7 +168,7 @@ public class Clave extends Casilla {
     }
 
     @Override
-    public  float calcularRadio( ) {
+    public  float calcularRadio() {
         float areaCasilla = espacioCasilla*espacioCasilla;
         //El area de los circulos es el 25% del area de la casilla
         float areaCirculo = (0.25f) * areaCasilla;
